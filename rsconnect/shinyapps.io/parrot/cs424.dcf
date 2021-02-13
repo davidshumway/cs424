@@ -1,0 +1,10 @@
+name: cs424
+title:
+username:
+account: parrot
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3633134
+bundleId: 4219075
+url: https://parrot.shinyapps.io/cs424/
+when: 1613240869.5191
