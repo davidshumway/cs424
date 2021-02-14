@@ -3,10 +3,6 @@
 
 library(shiny)
 library(DT)
-#~ library(scales)
-#~ library(tidyverse)
-#library(rsconnect)
-
 
 data <- read.csv('annual_generation_state.csv')#, sep = ',', header = TRUE)
 data$GENERATION..Megawatthours. <- as.numeric(gsub(',', '', data$GENERATION..Megawatthours.))
@@ -41,6 +37,9 @@ X <- dt[, list(SUM=sum(GEN)), by=key(dt)]
 b2 <- dt[X,
   list(ENERGY.SOURCE, GEN, YEAR, PCT=round(100*GEN/SUM, digits = 1))
 ]
+
+
+
 
 # filters b1 and b2 data based on checkboxes
 doFilters <- function(input, data, cstate) {
@@ -81,6 +80,9 @@ doFilters <- function(input, data, cstate) {
 }
 
 shinyServer(function(input, output) {
+
+
+
 #~   print(input)
 #~          checkboxInput('filter1', 'All', TRUE),
 #~          checkboxInput('filter2', 'Coal', FALSE),

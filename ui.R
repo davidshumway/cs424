@@ -35,6 +35,9 @@ names(data)[names(data) == 'GENERATION..Megawatthours.'] <- 'GEN'
 
 
 states = unique(data$STATE)
+years = unique(data$YEAR)
+print(years)
+#~ years[nrow(years) + 1,] = 'ALL'
 
 dashboardPage(
   dashboardHeader(title = 'CS 424 Spring 2020: Project 1'),
@@ -83,43 +86,29 @@ dashboardPage(
       ),
       
 #~       menuItem('States', icon = NULL,
-        selectInput('STATE1', 'Select a state to compare', states, selected = 'US-TOTAL'),
-        selectInput('STATE2', 'Select a state to compare', states, selected = 'IL')
+        selectInput('STATE1', 'Select first state to compare', states, selected = 'US-TOTAL'),
+        selectInput('STATE2', 'Select second state to compare', states, selected = 'IL'),
+        selectInput('YEAR1', 'Select first year to compare', years, selected = 'ALL'),
+        selectInput('YEAR2', 'Select second year to compare', years, selected = 'ALL')
 #~       )
-              
-#~             menuSubItem(
-#~         menuSubItem('All', icon = NULL,
-#~           checkboxInput('somevalue', 'All', FALSE)
-#~         ),
-#~         menuSubItem("Sub-item 2")
-#~       box(
-#~         title = 'Energy source(s)', solidHeader = TRUE,
-#~ #         'Box content here', br(), 'More box content',
-#~ #         sliderInput('slider', 'Slider input:', 1, 100, 50),
-#~         checkboxInput('somevalue', 'All', FALSE),
-#~         checkboxInput('somevalue', 'Coal', FALSE)
-#~       )
-      
-#~         selectInput('Year', 'Select the year to visualize'),
-#~         selectInput('Room', 'Select the room to visualize', listNamesGood, selected = 'Meeting Room')
     )
   ),
   dashboardBody(
     tabItems(
       tabItem(
         tabName = 'stacked',
-        fluidRow(
-          column(6,
-            fluidRow(
-#~               selectInput('STATE1', 'Select a state to compare', states, selected = 'US-TOTAL')
-            )
-          ),
-          column(6,
-            fluidRow(
-#~               selectInput('STATE2', 'Select a state to compare', states, selected = 'IL')
-            )
-          )
-        ),
+#~         fluidRow(
+#~           column(6,
+#~             fluidRow(
+#~ #               selectInput('STATE1', 'Select a state to compare', states, selected = 'US-TOTAL')
+#~             )
+#~           ),
+#~           column(6,
+#~             fluidRow(
+#~ #               selectInput('STATE2', 'Select a state to compare', states, selected = 'IL')
+#~             )
+#~           )
+#~         ),
         fluidRow(
           column(3,
             fluidRow(
@@ -176,6 +165,7 @@ dashboardPage(
             )
           )
         )
+#~       )
       ),
       
       tabItem(
@@ -185,22 +175,25 @@ dashboardPage(
             fluidRow(
               box(title = 'Annual energy by source',
                 solidHeader = TRUE, status = 'primary', width = 12,
-                dataTableOutput('tab1', height = 300)
+                dataTableOutput('tab1')
               )
             )
           ),
           column(6,
             fluidRow(
               box(title = 'Annual energy by source %',
-                solidHeader = TRUE, status = 'primary', width = 12,
-                dataTableOutput('tab2', height = 300)
+                solidHeader = TRUE, status = 'primary', width = 12, #height = 300,
+                dataTableOutput('tab2') # height = 'auto' ??????? causing error when first running R. Or always on shinyapps.io.
+                                        # Warning: Error in dataTableOutput: unused argument (height = "auto")
               )
             )
           )
         )
-      )
+      ),
+      
+      tabItem(tabName = 'TESTING-------------------')
+      
     )
-    
   )
 )
 
