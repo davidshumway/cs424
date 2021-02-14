@@ -26,18 +26,36 @@ data <- data[!(data$ENERGY.SOURCE == 'Pumped Storage'),]
 data$ENERGY.SOURCE[data$ENERGY.SOURCE == 'Hydroelectric Conventional'] <- 'Hydro'
 data$ENERGY.SOURCE[data$ENERGY.SOURCE == 'Wood and Wood Derived Fuels'] <- 'Wood'
 data$ENERGY.SOURCE[data$ENERGY.SOURCE == 'Solar Thermal and Photovoltaic'] <- 'Solar'
-data$STATE <- as.factor(data$STATE)
 data$TYPE.OF.PRODUCER <- as.factor(data$TYPE.OF.PRODUCER)
 data$ENERGY.SOURCE <- as.factor(data$ENERGY.SOURCE)
 data <- data[!(data$STATE == '  '),]
+data$STATE <- as.factor(data$STATE)
 data <- data[!(data$GENERATION..Megawatthours. < 0),]
 names(data)[names(data) == 'GENERATION..Megawatthours.'] <- 'GEN'
-
+# Data fix: some states have no entry for some types of energy,
+#  such as solar, especially early in the data, e.g., 1990.
+#  This causes colors to be different when comparing across different
+#  years, same state. E.g., 2019 IL and 1990 IL have a different
+#  color scheme!
+#~ print(data$ENERGY.SOURCE)
+#~ for(i in 1990:2019) {       # for-loop over rows
+#~   for (j in data$STATE) {
+#~     for (k in data$ENERGY.SOURCE) {
+#~       if (!data[i][j][k])
+#~         data[i][j][k] = 0
+#~     }
+#~   }
+#~ }
+#~ for(i in 1:nrow(data)) {       # for-loop over rows
+#~   print(data[i,]$ENERGY.SOURCE)
+#~   break
+#~   #if (data[i,]$
+#~   #data[i, ] <- data[i, ] - 100
+#~ }
 
 states = unique(data$STATE)
 years = unique(data$YEAR)
-print(years)
-#~ years[nrow(years) + 1,] = 'ALL'
+years = rbind('ALL', years) # prepend ALL to years list
 
 dashboardPage(
   dashboardHeader(title = 'CS 424 Spring 2020: Project 1'),
@@ -84,13 +102,15 @@ dashboardPage(
         checkboxInput('filter9', 'Wind', FALSE),
         checkboxInput('filter10','Wood', FALSE)
       ),
-      
-#~       menuItem('States', icon = NULL,
+      menuItem('States', icon = NULL,
         selectInput('STATE1', 'Select first state to compare', states, selected = 'US-TOTAL'),
-        selectInput('STATE2', 'Select second state to compare', states, selected = 'IL'),
-        selectInput('YEAR1', 'Select first year to compare', years, selected = 'ALL'),
-        selectInput('YEAR2', 'Select second year to compare', years, selected = 'ALL')
-#~       )
+        selectInput('STATE2', 'Select second state to compare', states, selected = 'IL')
+      ),
+      menuItem('Year', icon = NULL,
+        # selected = 'ALL' does not work, but selected = 0 works!
+        selectInput('YEAR1', 'Select first year to compare', years, selected = 0),
+        selectInput('YEAR2', 'Select second year to compare', years, selected = 0)
+      )
     )
   ),
   dashboardBody(
@@ -148,7 +168,7 @@ dashboardPage(
       tabItem(
         tabName = 'line',
         fluidRow(
-          column(6,
+          column(3,
             fluidRow(
               box(title = 'Annual energy by source',
                 solidHeader = TRUE, status = 'primary', width = 12,
@@ -156,11 +176,27 @@ dashboardPage(
               )
             )
           ),
-          column(6,
+          column(3,
             fluidRow(
               box(title = 'Annual energy by source %',
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('line2', height = 300)
+              )
+            )
+          ),
+          column(3,
+            fluidRow(
+              box(title = 'Annual energy by source',
+                solidHeader = TRUE, status = 'primary', width = 12,
+                plotOutput('line3', height = 300)
+              )
+            )
+          ),
+          column(3,
+            fluidRow(
+              box(title = 'Annual energy by source %',
+                solidHeader = TRUE, status = 'primary', width = 12,
+                plotOutput('line4', height = 300)
               )
             )
           )
@@ -171,28 +207,41 @@ dashboardPage(
       tabItem(
         tabName = 'table',
         fluidRow(
-          column(6,
+          column(3,
             fluidRow(
               box(title = 'Annual energy by source',
                 solidHeader = TRUE, status = 'primary', width = 12,
-                dataTableOutput('tab1')
+                DT::dataTableOutput('tab1', height='auto')
               )
             )
           ),
-          column(6,
+          column(3,
             fluidRow(
               box(title = 'Annual energy by source %',
-                solidHeader = TRUE, status = 'primary', width = 12, #height = 300,
-                dataTableOutput('tab2') # height = 'auto' ??????? causing error when first running R. Or always on shinyapps.io.
-                                        # Warning: Error in dataTableOutput: unused argument (height = "auto")
+                solidHeader = TRUE, status = 'primary', width = 12,
+                DT::dataTableOutput('tab2', height='300')
+              )
+            )
+          ),
+          column(3,
+            fluidRow(
+              box(title = 'Annual energy by source',
+                solidHeader = TRUE, status = 'primary', width = 12,
+                DT::dataTableOutput('tab3', height='auto')
+              )
+            )
+          ),
+          column(3,
+            fluidRow(
+              box(title = 'Annual energy by source %',
+                solidHeader = TRUE, status = 'primary', width = 12,
+                DT::dataTableOutput('tab4', height='300')
               )
             )
           )
         )
-      ),
-      
-      tabItem(tabName = 'TESTING-------------------')
-      
+      )
+            
     )
   )
 )
