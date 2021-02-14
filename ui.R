@@ -13,6 +13,29 @@ options(shiny.fullstacktrace = TRUE)
 #~               console.log(cb);
 #~               cb.prop('checked', true); //!checkBoxes.prop('checked')
 #~               x.prop('checked', true);
+
+
+## todo: load data function?
+data <- read.csv('annual_generation_state.csv')#, sep = ',', header = TRUE)
+data$GENERATION..Megawatthours. <- as.numeric(gsub(',', '', data$GENERATION..Megawatthours.))
+data$STATE <- toupper(data$STATE)
+data <- data[!(data$ENERGY.SOURCE == 'Other'),]
+data <- data[!(data$ENERGY.SOURCE == 'Other Gases'),]
+data <- data[!(data$ENERGY.SOURCE == 'Other Biomass'),]
+data <- data[!(data$ENERGY.SOURCE == 'Pumped Storage'),]
+data$ENERGY.SOURCE[data$ENERGY.SOURCE == 'Hydroelectric Conventional'] <- 'Hydro'
+data$ENERGY.SOURCE[data$ENERGY.SOURCE == 'Wood and Wood Derived Fuels'] <- 'Wood'
+data$ENERGY.SOURCE[data$ENERGY.SOURCE == 'Solar Thermal and Photovoltaic'] <- 'Solar'
+data$STATE <- as.factor(data$STATE)
+data$TYPE.OF.PRODUCER <- as.factor(data$TYPE.OF.PRODUCER)
+data$ENERGY.SOURCE <- as.factor(data$ENERGY.SOURCE)
+data <- data[!(data$STATE == '  '),]
+data <- data[!(data$GENERATION..Megawatthours. < 0),]
+names(data)[names(data) == 'GENERATION..Megawatthours.'] <- 'GEN'
+
+
+states = unique(data$STATE)
+
 dashboardPage(
   dashboardHeader(title = 'CS 424 Spring 2020: Project 1'),
   dashboardSidebar(
@@ -57,7 +80,12 @@ dashboardPage(
         checkboxInput('filter8', 'Solar', FALSE),
         checkboxInput('filter9', 'Wind', FALSE),
         checkboxInput('filter10','Wood', FALSE)
-      )
+      ),
+      
+#~       menuItem('States', icon = NULL,
+        selectInput('STATE1', 'Select a state to compare', states, selected = 'US-TOTAL'),
+        selectInput('STATE2', 'Select a state to compare', states, selected = 'IL')
+#~       )
               
 #~             menuSubItem(
 #~         menuSubItem('All', icon = NULL,
@@ -83,17 +111,45 @@ dashboardPage(
         fluidRow(
           column(6,
             fluidRow(
+#~               selectInput('STATE1', 'Select a state to compare', states, selected = 'US-TOTAL')
+            )
+          ),
+          column(6,
+            fluidRow(
+#~               selectInput('STATE2', 'Select a state to compare', states, selected = 'IL')
+            )
+          )
+        ),
+        fluidRow(
+          column(3,
+            fluidRow(
               box(title = 'Annual energy by source',
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('bar1', height = 300)
               )
             )
           ),
-          column(6,
+          column(3,
             fluidRow(
               box(title = 'Annual energy by source %',
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('bar2', height = 300)
+              )
+            )
+          ),
+          column(3,
+            fluidRow(
+              box(title = 'Annual energy by source',
+                solidHeader = TRUE, status = 'primary', width = 12,
+                plotOutput('bar3', height = 300)
+              )
+            )
+          ),
+          column(3,
+            fluidRow(
+              box(title = 'Annual energy by source %',
+                solidHeader = TRUE, status = 'primary', width = 12,
+                plotOutput('bar4', height = 300)
               )
             )
           )

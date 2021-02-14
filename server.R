@@ -36,14 +36,14 @@ b1 <- subset(b1, TYPE.OF.PRODUCER == 'Total Electric Power Industry')
 # table 2 pct
 library(data.table)
 dt <- data.table(b1)
-setkey(dt, "YEAR") 
+setkey(dt, 'YEAR') 
 X <- dt[, list(SUM=sum(GEN)), by=key(dt)] 
 b2 <- dt[X,
   list(ENERGY.SOURCE, GEN, YEAR, PCT=round(100*GEN/SUM, digits = 1))
 ]
 
 # filters b1 and b2 data based on checkboxes
-doFilters <- function(input, data) {
+doFilters <- function(input, data, cstate) {
   c = data
   if (!input$filter1) {
     if (!input$filter2) c <- subset(c, ENERGY.SOURCE != 'Coal')
@@ -56,6 +56,27 @@ doFilters <- function(input, data) {
     if (!input$filter9) c <- subset(c, ENERGY.SOURCE != 'Wind')
     if (!input$filter10)c <- subset(c, ENERGY.SOURCE != 'Wood')
   }
+#~   cstate <- factor(cstate[,1], levels=levels(c$STATE[,1]))
+#~   c <- subset(c, STATE == cstate)
+#~   cstate<-as.factor(cstate)
+#~   c<-c[c$STATE!=cstate,]
+#~   c$STATE<-droplevels(c$STATE)
+
+#~   print(cstate)
+#~   print(as.character(cstate))
+#~   print(as.factor(cstate))
+#~   print(as.factor(as.character(cstate)))
+#~   if (input$STATE1) {
+#~     print(cstate)
+#~   c <- subset(c, STATE == as.factor(cstate))
+#~   c <- subset(c, STATE == str(cstate))
+#~   c <- subset(c, STATE == as.factor(as.character(cstate)))
+  #c <- c[c$STATE != cstate,]
+#~   c <- c[(c$STATE %in% cstate) , ]
+#~   }
+#~   if (input$STATE2) {
+#~     c <- subset(c, STATE == input$STATE1)
+#~   }
   c
 }
 
@@ -93,7 +114,13 @@ shinyServer(function(input, output) {
   # stacked bar chart showing amount of each energy source per year
   # from 1990 - 2019 (assumption: for entire US?)
   output$bar1 <- renderPlot({
-    a = doFilters(input, b1)
+    a = doFilters(input, b1, input$STATE1)
+    ggplot(a, aes(x = YEAR, y = GEN)) + 
+      geom_col(aes(fill = ENERGY.SOURCE), width = 0.7) +
+      labs(x = 'Year', y = 'Count')
+  })
+  output$bar3 <- renderPlot({
+    a = doFilters(input, b1, input$STATE2)
     ggplot(a, aes(x = YEAR, y = GEN)) + 
       geom_col(aes(fill = ENERGY.SOURCE), width = 0.7) +
       labs(x = 'Year', y = 'Count')
@@ -101,10 +128,14 @@ shinyServer(function(input, output) {
   
   # stacked bar chart showing percent of the total production for each
   # energy source per year from 1990 - 2019
-#~   n1 <- as.numeric(as.character(b1$GEN))
-#~   n2 <- as.numeric(as.character(b2$GEN))
   output$bar2 <- renderPlot({
-    a = doFilters(input, b1)
+    a = doFilters(input, b1, input$STATE1)
+    ggplot(a, aes(x = YEAR, y = GEN, fill = ENERGY.SOURCE)) + 
+      geom_bar(position = 'fill', stat = 'identity') +
+      labs(x = 'Year', y = 'Count')
+  })
+  output$bar4 <- renderPlot({
+    a = doFilters(input, b1, input$STATE2)
     ggplot(a, aes(x = YEAR, y = GEN, fill = ENERGY.SOURCE)) + 
       geom_bar(position = 'fill', stat = 'identity') +
       labs(x = 'Year', y = 'Count')
@@ -113,7 +144,7 @@ shinyServer(function(input, output) {
   # line chart showing the amount of each energy source per year from
   # 1990 - 2019
   output$line1 <- renderPlot({
-    a = doFilters(input, b1)
+    a = doFilters(input, b1, input$STATE1)
     ggplot(a, aes(x = YEAR, y = GEN, fill = ENERGY.SOURCE, color = ENERGY.SOURCE)) +
       geom_line(stat = 'identity') +
       labs(x = 'Year', y = 'Energy produced')
@@ -122,8 +153,8 @@ shinyServer(function(input, output) {
   # line chart showing the percent of the total production for each
   # energy source per year from 1990 - 2019
   output$line2 <- renderPlot({
-    a = doFilters(input, b2)
-    ggplot(b2, aes(x = YEAR, y = PCT, fill = ENERGY.SOURCE, color = ENERGY.SOURCE)) +
+    a = doFilters(input, b2, input$STATE2)
+    ggplot(a, aes(x = YEAR, y = PCT, fill = ENERGY.SOURCE, color = ENERGY.SOURCE)) +
       geom_line(stat = 'identity') +
       labs(x = 'Year', y = 'Percentage of total energy produced')
   })
@@ -133,18 +164,8 @@ shinyServer(function(input, output) {
   #newNoonsReactive <- reactive({subset(allData, year(allData$newDate) == input$Year & Hour == 12)})
   output$tab1 <- DT::renderDataTable(
     DT::datatable(
-      doFilters(input, b1)[, c('YEAR','GEN','ENERGY.SOURCE')],
+      doFilters(input, b1, input$STATE1)[, c('YEAR','GEN','ENERGY.SOURCE')],
       # similar option is arrange(.., ..)
-#~       b1[, c('YEAR','GEN','ENERGY.SOURCE')], 
-#~       {
-#~         newOne <- reactive({b1})
-#~           b1
-#~         xx <- as.data.frame(table(newOne[,input$GEN], dnn = list("YEAR")), responseName = "YEAR")
-#~           reactive(b1)
-          #subset(b2, year(allData$newDate) == input$Year & Hour == 12)
-#~         newNoons <- newNoonsReactive()
-#~         temperatures <- as.data.frame(table(newNoons[,input$Room], dnn = list("Year")), responseName = "Year")
-#~       },
       options = list(searching = FALSE, pageLength = 9,
         lengthChange = FALSE, order = list(list(0, 'asc'))
       ),
@@ -156,16 +177,7 @@ shinyServer(function(input, output) {
   # each energy source per year from 1990 - 2019
   output$tab2 <- DT::renderDataTable(
     DT::datatable(
-      doFilters(input, b2)[, c('YEAR','GEN','ENERGY.SOURCE', 'PCT')],
-#~       {
-#~         newOne <- reactive({b1})
-#~           b1
-#~         xx <- as.data.frame(table(newOne[,input$GEN], dnn = list("YEAR")), responseName = "YEAR")
-#~           reactive(b1)
-          #subset(b2, year(allData$newDate) == input$Year & Hour == 12)
-#~         newNoons <- newNoonsReactive()
-#~         temperatures <- as.data.frame(table(newNoons[,input$Room], dnn = list("Year")), responseName = "Year")
-#~       },
+      doFilters(input, b2, input$STATE2)[, c('YEAR','GEN','ENERGY.SOURCE', 'PCT')],
       options = list(searching = FALSE, pageLength = 9,
         lengthChange = FALSE, order = list(list(0, 'asc'))
       ),
