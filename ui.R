@@ -122,7 +122,11 @@ dashboardPage(
           'coal/ng/nuclear, nuclear heatmap, 90/19, IL'),
           selected = 0
         )
-      )
+      ),
+      actionButton('About', 'About')
+#~       menuItem('About', icon = NULL,
+        
+#~       )
     )
   ),
   dashboardBody(
@@ -163,18 +167,6 @@ dashboardPage(
     tabItems(
       tabItem(
         tabName = 'stacked',
-#~         fluidRow(
-#~           column(6,
-#~             fluidRow(
-#~ #               selectInput('STATE1', 'Select a state to compare', states, selected = 'US-TOTAL')
-#~             )
-#~           ),
-#~           column(6,
-#~             fluidRow(
-#~ #               selectInput('STATE2', 'Select a state to compare', states, selected = 'IL')
-#~             )
-#~           )
-#~         ),
         fluidRow(
           column(3,
             fluidRow(

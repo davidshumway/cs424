@@ -107,7 +107,15 @@ doFilters2 <- function(input, percentize, cyear) {
 compareState = ''
 
 shinyServer(function(input, output) { #, session
-
+  
+  #have an 'about page' in your app with appropriate credits (where the data is from, who wrote the app, when, etc.)
+  observeEvent(input$About, {
+    showModal(modalDialog(
+      title = 'About this application',
+      HTML('Author: David Shumway<br><br>Data source: Data is from the U.S. Energy Information Administration, EIA.gov, and is available online here: (<a href="https://www.eia.gov/electricity/data/state/">https://www.eia.gov/electricity/data/state/</a>).<br><br>Overview: This application provides visualizations of power production data from all 50 US states and the District of Columbia, as well as from the US as a whole, for the time period 1990-2019. Visualizations include stacked bar chart, line chart, tabular data, and heatmap. Nine types of energy production are represented: Coal, Geothermal, Hydro, Natural Gas, Nuclear, Petroleum, Solar, Wind, and Wood. A side-by-side split-screen view allows users to compare between different different regions and energy mixes.<br><br>This application was last updated February 2021.')
+    ))
+  })
+  
   observe({
 #~     print(input$compare)
 #tail(x, 4)
