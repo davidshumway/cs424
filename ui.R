@@ -4,6 +4,7 @@
 library(shiny)
 library(shinydashboard)
 library(ggplot2)
+library(usmap)
 
 options(shiny.fullstacktrace = TRUE)
 
@@ -32,6 +33,9 @@ data <- data[!(data$STATE == '  '),]
 data$STATE <- as.factor(data$STATE)
 data <- data[!(data$GENERATION..Megawatthours. < 0),]
 names(data)[names(data) == 'GENERATION..Megawatthours.'] <- 'GEN'
+
+
+
 # Data fix: some states have no entry for some types of energy,
 #  such as solar, especially early in the data, e.g., 1990.
 #  This causes colors to be different when comparing across different
@@ -54,66 +58,95 @@ names(data)[names(data) == 'GENERATION..Megawatthours.'] <- 'GEN'
 #~ }
 
 states = unique(data$STATE)
+years2= unique(data$YEAR)
 years = unique(data$YEAR)
 years = rbind('ALL', years) # prepend ALL to years list
 
 dashboardPage(
   dashboardHeader(title = 'CS 424 Spring 2020: Project 1'),
   dashboardSidebar(
-     tags$head(    # checkbox JS, adapted from
-      tags$script( # https://stackoverflow.com/questions/32847743/
-        HTML(      # switching-between-menusubitems-in-shinydashboard
-          "
-#~           $(document).ready(function() {
-#~             $('#filter1').on('click', function() {
-#~               console.log('x');
-#~               console.log($(this).parent());
-#~               console.log($(this).parent('input'));
-#~               var x = $(this).parent().parent().get(0).getElementsByTagName('input');
-#~               console.log(x);
-#~               for (var i=0; i<x.length; i++) {
-#~                 x[i].checked = true; //$(this).attr('checked');
-#~               }
-#~             })
-#~           })
-          "
-        )
-      )
-    ),
-    
 #~       disable = FALSE,
 #~       collapsed = FALSE,
     sidebarMenu(
-      menuItem('Stacked', tabName = 'stacked', icon = NULL),
-      menuItem('Line',    tabName = 'line', icon = NULL),
-      menuItem('Table',   tabName = 'table', icon = NULL),
-      
-      # menu: select energy sources <all, 1,2,3,4,5>
-      menuItem('Sources', icon = NULL,
-#~      collapsible =  ??????
-        checkboxInput('filter1', 'All', TRUE),
-        checkboxInput('filter2', 'Coal', FALSE),
-        checkboxInput('filter3', 'Geothermal', FALSE),
-        checkboxInput('filter4', 'Hyrdo', FALSE),
-        checkboxInput('filter5', 'Nat. Gas', FALSE),
-        checkboxInput('filter6', 'Nuclear', FALSE),
-        checkboxInput('filter7', 'Petroleum', FALSE),
-        checkboxInput('filter8', 'Solar', FALSE),
-        checkboxInput('filter9', 'Wind', FALSE),
-        checkboxInput('filter10','Wood', FALSE)
+      menuItem('Charts', icon = NULL,
+        menuItem('Chart type', icon = NULL,
+          menuItem('Stacked', tabName = 'stacked', icon = NULL),
+          menuItem('Line', tabName = 'line', icon = NULL),
+          menuItem('Table', tabName = 'table', icon = NULL)
+        ),
+        menuItem('Energy Source', icon = NULL,
+          checkboxInput('filter1', 'All', TRUE),
+          checkboxInput('filter2', 'Coal', FALSE),
+          checkboxInput('filter3', 'Geothermal', FALSE),
+          checkboxInput('filter4', 'Hyrdo', FALSE),
+          checkboxInput('filter5', 'Nat. Gas', FALSE),
+          checkboxInput('filter6', 'Nuclear', FALSE),
+          checkboxInput('filter7', 'Petroleum', FALSE),
+          checkboxInput('filter8', 'Solar', FALSE),
+          checkboxInput('filter9', 'Wind', FALSE),
+          checkboxInput('filter10','Wood', FALSE)
+        ),
+        menuItem('State', icon = NULL,
+          selectInput('STATE1', 'Select first state to compare (left)', states, selected = 'US-TOTAL'),
+          selectInput('STATE2', 'Select second state to compare (right)', states, selected = 'IL')
+        ),
+        menuItem('Year', icon = NULL,
+          # selected = 'ALL' does not work, but selected = 0 works??
+          # Also, on first load, it seems to be empty
+          # but then after reloading its set to ALL??
+          selectInput('YEAR1', 'Select first year to compare (left)', years, selected = 0),
+          selectInput('YEAR2', 'Select second year to compare (right)', years, selected = 0)
+        )
       ),
-      menuItem('States', icon = NULL,
-        selectInput('STATE1', 'Select first state to compare', states, selected = 'US-TOTAL'),
-        selectInput('STATE2', 'Select second state to compare', states, selected = 'IL')
-      ),
-      menuItem('Year', icon = NULL,
-        # selected = 'ALL' does not work, but selected = 0 works!
-        selectInput('YEAR1', 'Select first year to compare', years, selected = 0),
-        selectInput('YEAR2', 'Select second year to compare', years, selected = 0)
+      menuItem('Heatmap', icon = NULL,
+        selectInput('heatmapSource1', 'Energy to map (left)',
+          choices = c('Coal', 'Geothermal', 'Hydro', 'Natural Gas', 'Nuclear',
+            'Petroleum', 'Solar', 'Wind', 'Wood'),
+          selected = 0),
+        selectInput('heatmapSource2', 'Energy to map (right)',
+          choices = c('Coal', 'Geothermal', 'Hydro', 'Natural Gas', 'Nuclear',
+            'Petroleum', 'Solar', 'Wind', 'Wood'),
+          selected = 0),
+        selectInput('HMYEAR1', 'Select first year to compare', years2, selected = 0),
+        selectInput('HMYEAR2', 'Select second year to compare', years2, selected = 2019)
       )
     )
   ),
   dashboardBody(
+    fluidRow(
+      column(3,
+        fluidRow(
+          box(title = textOutput('maptt2'),
+            solidHeader = TRUE, status = 'primary', width = 12,
+            plotOutput('map2', height = 300)
+          )
+        )
+      ),
+      column(3,
+        fluidRow(
+          box(title = textOutput('maptt1'),
+            solidHeader = TRUE, status = 'primary', width = 12,
+            plotOutput('map1', height = 300)
+          )
+        )
+      ),
+      column(3,
+        fluidRow(
+          box(title = textOutput('maptt4'),
+            solidHeader = TRUE, status = 'primary', width = 12,
+            plotOutput('map4', height = 300)
+          )
+        )
+      ),
+      column(3,
+        fluidRow(
+          box(title = textOutput('maptt3'),
+            solidHeader = TRUE, status = 'primary', width = 12,
+            plotOutput('map3', height = 300)
+          )
+        )
+      )
+    ),
     tabItems(
       tabItem(
         tabName = 'stacked',
@@ -132,7 +165,7 @@ dashboardPage(
         fluidRow(
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source',
+              box(title = textOutput('stackedtt1'),
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('bar1', height = 300)
               )
@@ -140,7 +173,7 @@ dashboardPage(
           ),
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source %',
+              box(title = textOutput('stackedtt2'),
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('bar2', height = 300)
               )
@@ -148,7 +181,7 @@ dashboardPage(
           ),
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source',
+              box(title = textOutput('stackedtt3'),
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('bar3', height = 300)
               )
@@ -156,7 +189,7 @@ dashboardPage(
           ),
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source %',
+              box(title = textOutput('stackedtt4'),
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('bar4', height = 300)
               )
@@ -170,7 +203,7 @@ dashboardPage(
         fluidRow(
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source',
+              box(title = textOutput('linett1'),
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('line1', height = 300)
               )
@@ -178,7 +211,7 @@ dashboardPage(
           ),
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source %',
+              box(title = textOutput('linett2'),
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('line2', height = 300)
               )
@@ -186,7 +219,7 @@ dashboardPage(
           ),
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source',
+              box(title = textOutput('linett3'),
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('line3', height = 300)
               )
@@ -194,14 +227,13 @@ dashboardPage(
           ),
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source %',
+              box(title = textOutput('linett4'),
                 solidHeader = TRUE, status = 'primary', width = 12,
                 plotOutput('line4', height = 300)
               )
             )
           )
         )
-#~       )
       ),
       
       tabItem(
@@ -209,7 +241,7 @@ dashboardPage(
         fluidRow(
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source',
+              box(title = textOutput('tablett1'),
                 solidHeader = TRUE, status = 'primary', width = 12,
                 DT::dataTableOutput('tab1', height='auto')
               )
@@ -217,15 +249,15 @@ dashboardPage(
           ),
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source %',
+              box(title = textOutput('tablett2'),
                 solidHeader = TRUE, status = 'primary', width = 12,
-                DT::dataTableOutput('tab2', height='300')
+                DT::dataTableOutput('tab2', height='auto')
               )
             )
           ),
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source',
+              box(title = textOutput('tablett3'),
                 solidHeader = TRUE, status = 'primary', width = 12,
                 DT::dataTableOutput('tab3', height='auto')
               )
@@ -233,38 +265,15 @@ dashboardPage(
           ),
           column(3,
             fluidRow(
-              box(title = 'Annual energy by source %',
+              box(title = textOutput('tablett4'),
                 solidHeader = TRUE, status = 'primary', width = 12,
-                DT::dataTableOutput('tab4', height='300')
+                DT::dataTableOutput('tab4', height='auto')
               )
             )
           )
         )
-      )
-            
+      )   
     )
   )
 )
 
-
-#~ shinyUI(fluidPage(
-
-#~   # Application title
-#~   titlePanel('Old Faithful Geyser Data'),
-
-#~   # Sidebar with a slider input for number of bins
-#~   sidebarLayout(
-#~     sidebarPanel(
-#~       sliderInput('bins',
-#~                   'Number of bins:',
-#~                   min = 1,
-#~                   max = 50,
-#~                   value = 30)
-#~     ),
-
-#~     # Show a plot of the generated distribution
-#~     mainPanel(
-#~       plotOutput('distPlot')
-#~     )
-#~   )
-#~ ))
