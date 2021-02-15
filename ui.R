@@ -5,6 +5,7 @@ library(shiny)
 library(shinydashboard)
 library(ggplot2)
 library(usmap)
+library(stringr)
 
 options(shiny.fullstacktrace = TRUE)
 
@@ -67,7 +68,7 @@ dashboardPage(
   dashboardSidebar(
 #~       disable = FALSE,
 #~       collapsed = FALSE,
-    sidebarMenu(
+    sidebarMenu(id='tab',
       menuItem('Charts', icon = NULL,
         menuItem('Chart type', icon = NULL,
           menuItem('Stacked', tabName = 'stacked', icon = NULL),
@@ -78,7 +79,7 @@ dashboardPage(
           checkboxInput('filter1', 'All', TRUE),
           checkboxInput('filter2', 'Coal', FALSE),
           checkboxInput('filter3', 'Geothermal', FALSE),
-          checkboxInput('filter4', 'Hyrdo', FALSE),
+          checkboxInput('filter4', 'Hydro', FALSE),
           checkboxInput('filter5', 'Nat. Gas', FALSE),
           checkboxInput('filter6', 'Nuclear', FALSE),
           checkboxInput('filter7', 'Petroleum', FALSE),
@@ -109,6 +110,18 @@ dashboardPage(
           selected = 0),
         selectInput('HMYEAR1', 'Select first year to compare', years2, selected = 0),
         selectInput('HMYEAR2', 'Select second year to compare', years2, selected = 2019)
+      ),
+      menuItem('Comparisons', icon = NULL,
+        selectInput('compare', 'Select an interesting comparison',
+          c(' ',
+          'wind/solar/hydro, wind heatmap, 90/19, TX',
+          'wind/solar/hydro, solar heatmap, 90/19, CA',
+          'wind/solar/hydro, hydro heatmap, 90/19, WA',
+          'coal/ng/nuclear, coal heatmap, 90/19, WV',
+          'coal/ng/nuclear, ng heatmap, 90/19, TX',
+          'coal/ng/nuclear, nuclear heatmap, 90/19, IL'),
+          selected = 0
+        )
       )
     )
   ),

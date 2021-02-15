@@ -7,6 +7,7 @@ library(data.table) # for calculating percentages
 library(ggplot2)
 library(usmap)
 library(scales)
+library(stringr)
 
 data <- read.csv('annual_generation_state.csv')#, sep = ',', header = TRUE)
 data$GENERATION..Megawatthours. <- as.numeric(gsub(',', '', data$GENERATION..Megawatthours.))
@@ -103,11 +104,114 @@ doFilters2 <- function(input, percentize, cyear) {
   c
 }
 
-shinyServer(function(input, output) {
+compareState = ''
 
-#~     newNoons <- newNoonsReactive()
-#~     temperatures <- as.data.frame(table(newNoons[,input$Room]))
-#~     temperatures$Var1 <- as.numeric(as.character(temperatures$Var1))
+shinyServer(function(input, output) { #, session
+
+  observe({
+#~     print(input$compare)
+#tail(x, 4)
+    if (input$compare != compareState) {
+      compareState = input$compare
+      # wind vs solar, wind heatmap
+      if (input$compare == 'wind/solar/hydro, wind heatmap, 90/19, TX') {
+        updateTabItems(getDefaultReactiveDomain(), 'tab', selected = 'line')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource1", selected = 'Wind')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource2", selected = 'Wind')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR1", selected = '1990')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR2", selected = '2019')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE1", selected = 'US-TOTAL')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE2", selected = 'TX')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR1", selected = 'ALL')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR2", selected = 'ALL')
+        for (i in 1:10)
+          updateCheckboxInput(getDefaultReactiveDomain(), paste0("filter",i), value = FALSE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter4", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter8", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter9", value = TRUE)
+      }
+      else if (input$compare == 'wind/solar/hydro, solar heatmap, 90/19, CA') {
+        updateTabItems(getDefaultReactiveDomain(), 'tab', selected = 'line')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource1", selected = 'Solar')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource2", selected = 'Solar')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR1", selected = '1990')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR2", selected = '2019')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE1", selected = 'US-TOTAL')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE2", selected = 'CA')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR1", selected = 'ALL')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR2", selected = 'ALL')
+        for (i in 1:10)
+          updateCheckboxInput(getDefaultReactiveDomain(), paste0("filter",i), value = FALSE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter4", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter8", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter9", value = TRUE)
+      }
+      else if (input$compare == 'wind/solar/hydro, hydro heatmap, 90/19, WA') {
+        updateTabItems(getDefaultReactiveDomain(), 'tab', selected = 'line')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource1", selected = 'Hydro')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource2", selected = 'Hydro')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR1", selected = '1990')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR2", selected = '2019')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE1", selected = 'US-TOTAL')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE2", selected = 'WA')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR1", selected = 'ALL')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR2", selected = 'ALL')
+        for (i in 1:10)
+          updateCheckboxInput(getDefaultReactiveDomain(), paste0("filter",i), value = FALSE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter4", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter8", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter9", value = TRUE)
+      }
+      else if (input$compare == 'coal/ng/nuclear, coal heatmap, 90/19, WV') {
+        updateTabItems(getDefaultReactiveDomain(), 'tab', selected = 'stacked')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource1", selected = 'Coal')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource2", selected = 'Coal')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR1", selected = '1990')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR2", selected = '2019')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE1", selected = 'US-TOTAL')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE2", selected = 'WV')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR1", selected = 'ALL')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR2", selected = 'ALL')
+        for (i in 1:10)
+          updateCheckboxInput(getDefaultReactiveDomain(), paste0("filter",i), value = FALSE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter2", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter5", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter6", value = TRUE)
+      }
+      else if (input$compare == 'coal/ng/nuclear, ng heatmap, 90/19, TX') {
+        updateTabItems(getDefaultReactiveDomain(), 'tab', selected = 'stacked')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource1", selected = 'Natural Gas')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource2", selected = 'Natural Gas')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR1", selected = '1990')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR2", selected = '2019')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE1", selected = 'US-TOTAL')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE2", selected = 'TX')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR1", selected = 'ALL')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR2", selected = 'ALL')
+        for (i in 1:10)
+          updateCheckboxInput(getDefaultReactiveDomain(), paste0("filter",i), value = FALSE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter2", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter5", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter6", value = TRUE)
+      }
+      else if (input$compare == 'coal/ng/nuclear, nuclear heatmap, 90/19, IL') {
+        updateTabItems(getDefaultReactiveDomain(), 'tab', selected = 'stacked')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource1", selected = 'Nuclear')
+        updateSelectInput(getDefaultReactiveDomain(), "heatmapSource2", selected = 'Nuclear')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR1", selected = '1990')
+        updateSelectInput(getDefaultReactiveDomain(), "HMYEAR2", selected = '2019')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE1", selected = 'US-TOTAL')
+        updateSelectInput(getDefaultReactiveDomain(), "STATE2", selected = 'IL')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR1", selected = 'ALL')
+        updateSelectInput(getDefaultReactiveDomain(), "YEAR2", selected = 'ALL')
+        for (i in 1:10)
+          updateCheckboxInput(getDefaultReactiveDomain(), paste0("filter",i), value = FALSE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter2", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter5", value = TRUE)
+        updateCheckboxInput(getDefaultReactiveDomain(), "filter6", value = TRUE)
+      }
+    }
+  })
   
   # You need to add how geography affects this mix
   # geo,solar,wind,wood empty legend?
