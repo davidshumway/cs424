@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <title>Data</title>
+</head>
+<body>
+  <div class="container">
+<h2>CS 424 Spring 2021</h2>
+<h2>David Shumway</h2>
+<p>
+  <a href="../../index.html">Home</a>
+</p>
+<p>
+  Menu:
+  <a href="./index.html">Introduction</a> |
+  Data |
+  <a href="./notes.html">Interesting notes on the data</a>
+</p>
+
+<h4>Project 1 - "Power and the Passion"</h4>
+<h5>A web-based application using R, Shiny, ggplot2, and Shiny Dashboard to visualize electrical power generation in the US from 1990-2019</h5>
+
+<p>
+Data source: Data is from the U.S. Energy Information Administration, EIA.gov, and is available online here: (<a href="https://www.eia.gov/electricity/data/state/">https://www.eia.gov/electricity/data/state/</a>).
+</p>
+
+<p>
+Data preprocessing: Data was initially loaded into R from a CSV file.
+Cleaning of the data then included conversion of string data to numerical data, removal of rare energy sources in the data (e.g., "Other", "Other Gases"), renaming energy sources to be more user-friendly (e.g., representing "Hydroelectric Conventional" as simply "Hydro"), factorizing state and energy source data, and filling in generation amounts of 0 within the data where a type of energy was not represented (e.g., in the original dataset Illinois in 1990 only includes 6 types of energy produced, whereas in the whole of the dataset 9 separate types of energy production are represented).<br><br>
+
+Example of data loading in R:
+<pre>
+data <- read.csv('annual_generation_state.csv')#, sep = ',', header = TRUE)
+data$GENERATION..Megawatthours. <- as.numeric(gsub(',', '', data$GENERATION..Megawatthours.))
+data$STATE <- toupper(data$STATE)
+data <- data[!(data$ENERGY.SOURCE == 'Other'),]
+data <- data[!(data$ENERGY.SOURCE == 'Other Gases'),]
+data <- data[!(data$ENERGY.SOURCE == 'Other Biomass'),]
+data <- data[!(data$ENERGY.SOURCE == 'Pumped Storage'),]
+data$ENERGY.SOURCE[data$ENERGY.SOURCE == 'Hydroelectric Conventional'] <- 'Hydro'
+data$ENERGY.SOURCE[data$ENERGY.SOURCE == 'Wood and Wood Derived Fuels'] <- 'Wood'
+data$ENERGY.SOURCE[data$ENERGY.SOURCE == 'Solar Thermal and Photovoltaic'] <- 'Solar'
+data$TYPE.OF.PRODUCER <- as.factor(data$TYPE.OF.PRODUCER)
+data <- subset(data, STATE != '  ', STATE != ' ')
+data$STATE <- as.factor(data$STATE)
+data <- data[!(data$GENERATION..Megawatthours. < 0),]
+names(data)[names(data) == 'GENERATION..Megawatthours.'] <- 'GEN'
+data$ENERGY.SOURCE <- as.factor(data$ENERGY.SOURCE)
+data <- subset(data, TYPE.OF.PRODUCER == 'Total Electric Power Industry')
+data <- complete(data, YEAR, STATE, ENERGY.SOURCE,
+  fill = list(GEN = 0, TYPE.OF.PRODUCER = 'Total Electric Power Industry'))
+</pre>
+</p>
+
+<p>
+Source code, documentation, data, and instructions for use are available online here: (<a href="https://github.com/davidshumway/cs424/">https://github.com/davidshumway/cs424/</a>).
+  </p>
+
+</div>
+</body>
+</html>

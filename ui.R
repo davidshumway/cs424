@@ -64,7 +64,7 @@ years = unique(data$YEAR)
 years = rbind('ALL', years) # prepend ALL to years list
 
 dashboardPage(
-  dashboardHeader(title = 'CS 424 Spring 2020: Project 1'),
+  dashboardHeader(title = 'CS 424: Project 1'),
   dashboardSidebar(
 #~       disable = FALSE,
 #~       collapsed = FALSE,
