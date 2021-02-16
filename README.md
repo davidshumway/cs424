@@ -14,6 +14,11 @@ install.packages('shinydashboard')
 install.packages('tidyr')
 ```
 
+Clone the package:
+```bash
+$ git clone https://github.com/davidshumway/cs424 && cd ./cs424
+```
+
 ## Running the program
 The program may then be run in an R console:
 ```bash
