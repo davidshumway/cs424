@@ -12,7 +12,7 @@ library(leaflet)
 library(RColorBrewer)
 library(scales)
 library(lattice)
-library(dplyr)
+#~ library(dplyr)
 
 energyListRen <- list(
   'Geothermal' = 'Geothermal',
@@ -33,8 +33,6 @@ shinyServer(function(input, output, session) { #, session
   output$textAbout <- renderText({ 
     'This is the app.'
   })
-  
-  
   
   # ill.
 #~   West_Bounding_Coordinate: -91.4244

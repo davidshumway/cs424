@@ -115,18 +115,13 @@ data3$Color = unlist(data3$Color[data3$Type])
 # that is renewable, and the percent of the total capacity that is
 # non-renewable
 # Assumption: Capacity here refers to generation----
-#data3$Popup = paste(data3$Name, '<br>', 'Assumed type: ', data3$Type, sep = '')
-for (i in 1:nrow(data3)) {
-    row <- data3[i,]
-    for (j in 1:length(energyList)) {
-        type <- energyList[[j]][1]
-        if (row[[type]] > 0) {
-            data3[i,][['Popup']] <- paste(row[['Popup']], '<br>', type, ': ', row[[type]], sep = '')
-        }
-    }
-}
+#~ data3$Popup = paste(data3$Name, '<br>', 'Assumed type: ', data3$Type, sep = '')
+data3$Popup <- paste(data3$Name, '<br>', apply(data3[energyTypes], 1, function(x) {
+  inds <- x > 0
+  paste(energyTypes[inds], x[inds], sep = ': ', collapse = '<br>')
+}))
 
-head(data3)
+#~ head(data3$Popup)
 
 # Illinois 2018
 data3Illinois <- subset(data3, State == 'IL')
