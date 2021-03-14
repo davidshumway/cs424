@@ -88,27 +88,44 @@ navbarPage('Superz', id='nav',
         draggable = TRUE, top = 60, left = 20, right = 'auto', bottom = 'auto',
         width = 330, height = 'auto',
         h2('Z explorer'),
-        actionButton('illAll21', 'All'),
-        actionButton('illRen21', 'Renewables'),
-        actionButton('illNonRen21', 'Non-Renewables'),
-        checkboxGroupInput('illSource21', 'Source:',
+        actionButton('m1All', 'All'),
+        actionButton('m1Ren', 'Renewables'),
+        actionButton('m1NonRen', 'Non-Renewables'),
+        actionButton('m1Link', '', icon = icon('link')),
+        checkboxGroupInput('m1Source', 'Source:',
           choices = energyList, selected = unlist(energyList)
         ),
-        br(),
-        actionButton('illReset21', 'Reset Map')
+#~         br(),
+        selectInput('m1Year', 'Year:',
+          c('2000', '2010', '2018'),
+          selected = 2000
+        ),
+        selectInput('m1State', 'State:',
+          c('All states' = 'ALL', structure(state.abb, names = state.name), 'Washington, DC' = 'DC'),
+          multiple = FALSE, selected = 'IL'
+        ),
+        actionButton('m1Reset', 'Reset Map')
       ),
       absolutePanel(id = 'controls2', class = 'panel panel-default', fixed = TRUE,
         draggable = TRUE, top = 60, left = 'auto', right = 20, bottom = 'auto',
         width = 330, height = 'auto',
         h2('Z explorer'),
-        actionButton('illAll22', 'All'),
-        actionButton('illRen22', 'Renewables'),
-        actionButton('illNonRen22', 'Non-Renewables'),
-        checkboxGroupInput('illSource22', 'Source:',
+        actionButton('m2All', 'All'),
+        actionButton('m2Ren', 'Renewables'),
+        actionButton('m2NonRen', 'Non-Renewables'),
+        actionButton('m2Link', '', icon = icon('link')),
+        checkboxGroupInput('m2Source', 'Source:',
           choices = energyList, selected = unlist(energyList)
         ),
-        br(),
-        actionButton('illReset22', 'Reset Map')
+        selectInput('m2Year', 'Year:',
+          c('2000', '2010', '2018'),
+          selected = 2018
+        ),
+        selectInput('m2State', 'State:',
+          c('All states' = 'ALL', structure(state.abb, names = state.name), 'Washington, DC' = 'DC'),
+          multiple = FALSE, selected = 'IL'
+        ),
+        actionButton('m2Reset', 'Reset Map')
       )
 #~     )
   ),

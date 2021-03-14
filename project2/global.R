@@ -109,7 +109,6 @@ nonnumCols <- as.vector(
 )
 for (i in names(data3)) {
   if (i %in% nonnumCols) next
-  
   data1[[i]] <- as.numeric(gsub(',', '', data1[[i]]))
   data1[[i]] <- ifelse(is.na(data1[[i]]), 0, data1[[i]])
   data2[[i]] <- as.numeric(gsub(',', '', data2[[i]]))
@@ -119,11 +118,18 @@ for (i in names(data3)) {
 }
 
 # Some plants have zero or less output.
-# Let's remove those.
+# Remove those.
 #AnnualGen
 data1 <- data1[!(data1$AnnualGen <= 0),]
 data2 <- data2[!(data2$AnnualGen <= 0),]
 data3 <- data3[!(data3$AnnualGen <= 0),]
+
+# In 2000 some plants don't have a lat/lng
+data1 <- data1[!(data1$Lat == 'N/A'),]
+data1 <- data1[!(data1$Lng == 'N/A'),]
+# 2000 data lat/lng is chr, not dbl. Not negative??
+data1$Lat <- as.double(data1$Lat)
+data1$Lng <- as.double(data1$Lng) * -1
 
 # Calculate other, pctOther max, and subsequently type
 library(matrixStats)
@@ -187,12 +193,12 @@ data3$Popup <- paste(data3$Name, '<br>', apply(data3[energyTypes], 1, function(x
   paste(energyTypes[inds], x[inds], sep = ': ', collapse = '<br>')
 }))
 
-#head(data3$Popup)
+#~ print(head(data1))
+#~ print(head(data2))
+#~ print(head(data3))
 
-# Illinois 2018
+# Special Illinois 2000/2018
+data1Illinois <- subset(data1, State == 'IL')
 data3Illinois <- subset(data3, State == 'IL')
-#data3Illinois <- subset(data3, State == 'IL')
-#data3Illinois <- subset(data3, State == 'IL')
-#head(data3Illinois)
 
 

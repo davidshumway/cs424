@@ -109,18 +109,191 @@ shinyServer(function(input, output, session) { #, session
   })
   
   # part 2, comparing two states
+  rv <- reactiveValues(linked = FALSE, d1 = data1Illinois, d2 = data3Illinois)
+  #map = 'map1', data = data3)
+
+  # 1 input
+  filteredData1 <- reactive({
+    if (rv$linked) {
+      updateCheckboxGroupInput(session, 'm2Source', 'Source:',
+        choices = energyList, selected = unlist(input$m1Source)
+      )
+    }
+    if (input$m1Year == 2000) c <- data1
+    else if (input$m1Year == 2010) c <- data2
+    else c <- data3
+    if (input$m1State != 'ALL') c <- subset(c, State == input$m1State)
+    cbSource <- input$m1Source
+    if (!'Coal' %in% cbSource) c <- subset(c, Type != 'Coal')
+    if (!'Geothermal' %in% cbSource) c <- subset(c, Type != 'Geothermal')
+    if (!'Gas' %in% cbSource) c <- subset(c, Type != 'Gas')
+    if (!'Nuclear' %in% cbSource) c <- subset(c, Type != 'Nuclear')
+    if (!'Oil' %in% cbSource) c <- subset(c, Type != 'Oil')
+    if (!'Solar' %in% cbSource) c <- subset(c, Type != 'Solar')
+    if (!'Wind' %in% cbSource) c <- subset(c, Type != 'Wind')
+    if (!'Biomass' %in% cbSource) c <- subset(c, Type != 'Biomass')
+    if (!'Other' %in% cbSource) c <- subset(c, Type != 'Other')
+    if (!'Hydro' %in% cbSource) c <- subset(c, Type != 'Hydro')
+    leafletProxy('map1', data = c) %>%
+      clearShapes() %>%
+      clearMarkerClusters() %>%
+      clearMarkers() %>%
+      addAwesomeMarkers(
+        icon = awesomeIcons(icon = 'ion-ionic', library = 'ion', markerColor = ~Color),
+        lng = ~Lng, lat = ~Lat, popup = ~as.character(Popup),
+        clusterOptions = markerClusterOptions()
+      )
+  })
+#~   ex <- eventReactive(input$m1State, {
+#~ #     if (input$y == 'h'){j <- 4}
+#~ #     return(c(i, j))
+#~     ## ignoreNULL: run at startup
+#~     redrawMap1()
+#~     filteredData1()
+#~   }, ignoreNULL = TRUE)
+  
+  observeEvent(input$m1State, {
+    redrawMap1()
+    filteredData1()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m1Year, {
+    # redraw leaflet
+    if (input$m1Year == 2000) rv$d1 <- data1
+    else if (input$m1Year == 2010) rv$d1 <- data2
+    else rv$d1 <- data3
+    redrawMap1()
+    filteredData1()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m1Link, {
+    if (!rv$linked) {
+      rv$linked = TRUE
+    } else {
+      rv$linked = FALSE
+    }
+    filteredData1()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m1Source, {
+    # individual cb
+    print('y')
+    filteredData1()
+  }, ignoreInit=TRUE);
+  observeEvent(input$m1All, {
+    updateCheckboxGroupInput(session, 'm1Source', 'Source:',
+      choices = energyList, selected = unlist(energyList)
+    )
+    filteredData1()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m1Ren, {
+    updateCheckboxGroupInput(session, 'm1Source', 'Source:',
+      choices = energyList, selected = unlist(energyListRen)
+    )
+    filteredData1()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m1NonRen, {
+    updateCheckboxGroupInput(session, 'm1Source', 'Source:',
+      choices = energyList, selected = unlist(energyListNonRen)
+    )
+    filteredData1()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m1Reset, {
+    updateCheckboxGroupInput(session, 'm1Source', 'Source:',
+      choices = energyList, selected = unlist(energyList)
+    )
+    filteredData1()
+  }, ignoreInit=TRUE)
+  # 2 input
+  filteredData2 <- reactive({
+    if (rv$linked) {
+      updateCheckboxGroupInput(session, 'm1Source', 'Source:',
+        choices = energyList, selected = unlist(input$m2Source)
+      )
+    }
+    if (input$m2Year == 2000) c <- data1
+    else if (input$m2Year == 2010) c <- data2
+    else c <- data3
+    if (input$m2State != 'ALL') c <- subset(c, State == input$m2State)
+    cbSource <- input$m2Source
+    if (!'Coal' %in% cbSource) c <- subset(c, Type != 'Coal')
+    if (!'Geothermal' %in% cbSource) c <- subset(c, Type != 'Geothermal')
+    if (!'Gas' %in% cbSource) c <- subset(c, Type != 'Gas')
+    if (!'Nuclear' %in% cbSource) c <- subset(c, Type != 'Nuclear')
+    if (!'Oil' %in% cbSource) c <- subset(c, Type != 'Oil')
+    if (!'Solar' %in% cbSource) c <- subset(c, Type != 'Solar')
+    if (!'Wind' %in% cbSource) c <- subset(c, Type != 'Wind')
+    if (!'Biomass' %in% cbSource) c <- subset(c, Type != 'Biomass')
+    if (!'Other' %in% cbSource) c <- subset(c, Type != 'Other')
+    if (!'Hydro' %in% cbSource) c <- subset(c, Type != 'Hydro')
+    leafletProxy('map2', data = c) %>%
+      clearShapes() %>%
+      clearMarkerClusters() %>%
+      clearMarkers() %>%
+      addAwesomeMarkers(
+        icon = awesomeIcons(icon = 'ion-ionic', library = 'ion', markerColor = ~Color),
+        lng = ~Lng, lat = ~Lat, popup = ~as.character(Popup),
+        clusterOptions = markerClusterOptions()
+      )
+  })
+  observeEvent(input$m2State, {
+    filteredData2()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m2Year, {
+    # redraw leaflet
+    if (input$m2Year == 2000) rv$d2 <- data1
+    else if (input$m2Year == 2010) rv$d2 <- data2
+    else rv$d2 <- data3
+    redrawMap2()
+    filteredData2()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m2Link, {
+    if (!rv$linked) {
+      rv$linked = TRUE
+    } else {
+      rv$linked = FALSE
+    }
+    filteredData2()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m2Source, {
+    # individual cb
+    filteredData2()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m2All, {
+    updateCheckboxGroupInput(session, 'm2Source', 'Source:',
+      choices = energyList, selected = unlist(energyList)
+    )
+    filteredData2()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m2Ren, {
+    updateCheckboxGroupInput(session, 'm2Source', 'Source:',
+      choices = energyList, selected = unlist(energyListRen)
+    )
+    filteredData2()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m2NonRen, {
+    updateCheckboxGroupInput(session, 'm2Source', 'Source:',
+      choices = energyList, selected = unlist(energyListNonRen)
+    )
+    filteredData2()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m2Reset, {
+    updateCheckboxGroupInput(session, 'm2Source', 'Source:',
+      choices = energyList, selected = unlist(energyList)
+    )
+    filteredData2()
+  }, ignoreInit=TRUE)
+  
+  # p2, maps 1/2 
+  # maps require redraw altering dataset year
   output$map1 <- renderLeaflet({
     xc <- c('red','#ff8e7f','beige','darkgreen','blue','lightblue',
       '#5a386a','cadetblue','gray','black')
     xl <- c('Coal','Oil','Gas','Nuclear','Hydro','Biomass','Wind',
       'Solar','Geothermal','Other')
-    leaflet(data3Illinois) %>%
+    leaflet(data1Illinois) %>%
       addTiles() %>%
       addAwesomeMarkers(
         icon = awesomeIcons(icon = 'ion-ionic', library = 'ion', markerColor = ~Color),
         lng = ~Lng, lat = ~Lat, popup = ~as.character(Popup),
-        clusterOptions = markerClusterOptions() # without cluster crashing
-                                                # b/c too many markers
+        clusterOptions = markerClusterOptions()
       ) %>%
       addLegend(colors = xc, labels = xl, opacity = 1)
   })
@@ -134,10 +307,43 @@ shinyServer(function(input, output, session) { #, session
       addAwesomeMarkers(
         icon = awesomeIcons(icon = 'ion-ionic', library = 'ion', markerColor = ~Color),
         lng = ~Lng, lat = ~Lat, popup = ~as.character(Popup),
-        clusterOptions = markerClusterOptions() # without cluster crashing
-                                                # b/c too many markers
+        clusterOptions = markerClusterOptions()
       ) %>%
       addLegend(colors = xc, labels = xl, opacity = 1)
+  })
+  redrawMap1 <- reactive({
+    output$map1 <- renderLeaflet({
+      xc <- c('red','#ff8e7f','beige','darkgreen','blue','lightblue',
+        '#5a386a','cadetblue','gray','black')
+      xl <- c('Coal','Oil','Gas','Nuclear','Hydro','Biomass','Wind',
+        'Solar','Geothermal','Other')
+      leaflet(rv$d1) %>%
+        addTiles() %>%
+        addAwesomeMarkers(
+          icon = awesomeIcons(icon = 'ion-ionic', library = 'ion', markerColor = ~Color),
+          lng = ~Lng, lat = ~Lat, popup = ~as.character(Popup),
+          clusterOptions = markerClusterOptions() # without cluster crashing
+                                                  # b/c too many markers
+        ) %>%
+        addLegend(colors = xc, labels = xl, opacity = 1)
+    })
+  })
+  redrawMap2 <- reactive({
+    output$map2 <- renderLeaflet({
+      xc <- c('red','#ff8e7f','beige','darkgreen','blue','lightblue',
+        '#5a386a','cadetblue','gray','black')
+      xl <- c('Coal','Oil','Gas','Nuclear','Hydro','Biomass','Wind',
+        'Solar','Geothermal','Other')
+      leaflet(rv$d2) %>%
+        addTiles() %>%
+        addAwesomeMarkers(
+          icon = awesomeIcons(icon = 'ion-ionic', library = 'ion', markerColor = ~Color),
+          lng = ~Lng, lat = ~Lat, popup = ~as.character(Popup),
+          clusterOptions = markerClusterOptions() # without cluster crashing
+                                                  # b/c too many markers
+        ) %>%
+        addLegend(colors = xc, labels = xl, opacity = 1)
+    })
   })
   
   output$data1tbl <- DT::renderDataTable({
