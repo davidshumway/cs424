@@ -1,5 +1,7 @@
 ## ui.R
 ## Author: David Shumway
+## Initial template is from here:
+## https://shiny.rstudio.com/gallery/superzip-example.html
 
 #~ library(shiny)
 library(shinydashboard)
@@ -65,6 +67,50 @@ navbarPage('Superz', id='nav',
 #~         'Data compiled for ', tags$em('Coming Apart: The State of White America, 1960–2010'), ' by Charles Murray (Crown Forum, 2012).'
 #~       )
     )
+  ),
+  
+  tabPanel('Two-state comparison', style = 'height:calc(100vh - 51px); margin-top: -20px;', # 100vh is full, minus 50+1border nav, minus 20 nav margin
+    
+#~     div(class = 'outer',
+      tags$head(
+        includeCSS('style.css'),
+        includeScript('gomap.js')
+      ),
+      fluidRow(style = 'height:calc(100vh - 51px);',
+        box(style = 'height:calc(100vh - 51px);',
+          div(leafletOutput('map1', height = '100%'), style = 'height:calc(100vh - 51px);')
+        ),
+        box(style = 'height:calc(100vh - 51px);',
+          div(leafletOutput('map2', height = '100%'), style = 'height:calc(100vh - 51px);')
+        )
+      ),
+      absolutePanel(id = 'controls1', class = 'panel panel-default', fixed = TRUE,
+        draggable = TRUE, top = 60, left = 20, right = 'auto', bottom = 'auto',
+        width = 330, height = 'auto',
+        h2('Z explorer'),
+        actionButton('illAll21', 'All'),
+        actionButton('illRen21', 'Renewables'),
+        actionButton('illNonRen21', 'Non-Renewables'),
+        checkboxGroupInput('illSource21', 'Source:',
+          choices = energyList, selected = unlist(energyList)
+        ),
+        br(),
+        actionButton('illReset21', 'Reset Map')
+      ),
+      absolutePanel(id = 'controls2', class = 'panel panel-default', fixed = TRUE,
+        draggable = TRUE, top = 60, left = 'auto', right = 20, bottom = 'auto',
+        width = 330, height = 'auto',
+        h2('Z explorer'),
+        actionButton('illAll22', 'All'),
+        actionButton('illRen22', 'Renewables'),
+        actionButton('illNonRen22', 'Non-Renewables'),
+        checkboxGroupInput('illSource22', 'Source:',
+          choices = energyList, selected = unlist(energyList)
+        ),
+        br(),
+        actionButton('illReset22', 'Reset Map')
+      )
+#~     )
   ),
 
   tabPanel('Data explorer (2000)',

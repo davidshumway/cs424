@@ -11,6 +11,7 @@ div.outer {
   bottom: 0;
   overflow: hidden;
   padding: 0;
+  height: 100vh; 
 }
 
 /* Customize fonts */
@@ -20,17 +21,17 @@ body, label, input, button, select {
 }
 h1, h2, h3, h4 { font-weight: 400; }
 
-#controls {
+#controls,#controls1,#controls2 {
   /* Appearance */
   background-color: white;
   padding: 0 20px 20px 20px;
   cursor: move;
   /* Fade out while not hovering */
   opacity: 0.65;
-  zoom: 0.9;
+  zoom: 0.7;
   transition: opacity 500ms 1s;
 }
-#controls:hover {
+#controls:hover,#controls1:hover,#controls2:hover {
   /* Fade in while hovering */
   opacity: 0.95;
   transition-delay: 0;

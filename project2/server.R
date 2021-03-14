@@ -31,7 +31,7 @@ energyListNonRen <- list(
 shinyServer(function(input, output, session) { #, session
   # about
   output$textAbout <- renderText({ 
-    'This is the app.'
+    'Initial template used is here: (https://shiny.rstudio.com/gallery/superzip-example.html).'
   })
   
   # ill.
@@ -41,7 +41,6 @@ shinyServer(function(input, output, session) { #, session
 #~   South_Bounding_Coordinate: 36.9540
   filteredData <- reactive({
     c <- data3Illinois
-    print(input$illSource)
     if (!'Coal' %in% input$illSource) c <- subset(c, Type != 'Coal')
     if (!'Geothermal' %in% input$illSource) c <- subset(c, Type != 'Geothermal')
     if (!'Gas' %in% input$illSource) c <- subset(c, Type != 'Gas')
@@ -94,6 +93,38 @@ shinyServer(function(input, output, session) { #, session
   })
   output$map <- renderLeaflet({
     # Apparently lightred = ff8e7f and darkpurple = 5a386a
+    xc <- c('red','#ff8e7f','beige','darkgreen','blue','lightblue',
+      '#5a386a','cadetblue','gray','black')
+    xl <- c('Coal','Oil','Gas','Nuclear','Hydro','Biomass','Wind',
+      'Solar','Geothermal','Other')
+    leaflet(data3Illinois) %>%
+      addTiles() %>%
+      addAwesomeMarkers(
+        icon = awesomeIcons(icon = 'ion-ionic', library = 'ion', markerColor = ~Color),
+        lng = ~Lng, lat = ~Lat, popup = ~as.character(Popup),
+        clusterOptions = markerClusterOptions() # without cluster crashing
+                                                # b/c too many markers
+      ) %>%
+      addLegend(colors = xc, labels = xl, opacity = 1)
+  })
+  
+  # part 2, comparing two states
+  output$map1 <- renderLeaflet({
+    xc <- c('red','#ff8e7f','beige','darkgreen','blue','lightblue',
+      '#5a386a','cadetblue','gray','black')
+    xl <- c('Coal','Oil','Gas','Nuclear','Hydro','Biomass','Wind',
+      'Solar','Geothermal','Other')
+    leaflet(data3Illinois) %>%
+      addTiles() %>%
+      addAwesomeMarkers(
+        icon = awesomeIcons(icon = 'ion-ionic', library = 'ion', markerColor = ~Color),
+        lng = ~Lng, lat = ~Lat, popup = ~as.character(Popup),
+        clusterOptions = markerClusterOptions() # without cluster crashing
+                                                # b/c too many markers
+      ) %>%
+      addLegend(colors = xc, labels = xl, opacity = 1)
+  })
+  output$map2 <- renderLeaflet({
     xc <- c('red','#ff8e7f','beige','darkgreen','blue','lightblue',
       '#5a386a','cadetblue','gray','black')
     xl <- c('Coal','Oil','Gas','Nuclear','Hydro','Biomass','Wind',

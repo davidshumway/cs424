@@ -5,6 +5,6 @@ account: parrot
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3786925
-bundleId: 4341235
+bundleId: 4341272
 url: https://parrot.shinyapps.io/project2/
-when: 1615690203.60305
+when: 1615691134.77648
