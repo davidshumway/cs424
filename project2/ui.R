@@ -17,7 +17,7 @@ set.seed(100)
 
 
 
-navbarPage('Superz', id='nav',
+navbarPage('Raw Power', id='nav',
 
   tabPanel('Illinois map',
     div(class = 'outer',
@@ -37,7 +37,7 @@ navbarPage('Superz', id='nav',
         draggable = TRUE, top = 60, left = 'auto', right = 20, bottom = 'auto',
         width = 330, height = 'auto',
 
-        h2('Z explorer'),
+        h4('Map explorer'),
         
         actionButton('illAll', 'All'),
         actionButton('illRen', 'Renewables'),
@@ -87,7 +87,7 @@ navbarPage('Superz', id='nav',
       absolutePanel(id = 'controls1', class = 'panel panel-default', fixed = TRUE,
         draggable = TRUE, top = 60, left = 20, right = 'auto', bottom = 'auto',
         width = 330, height = 'auto',
-        h2('Z explorer'),
+        h4('Map explorer'),
         actionButton('m1All', 'All'),
         actionButton('m1Ren', 'Renewables'),
         actionButton('m1NonRen', 'Non-Renewables'),
@@ -121,7 +121,7 @@ navbarPage('Superz', id='nav',
       absolutePanel(id = 'controls2', class = 'panel panel-default', fixed = TRUE,
         draggable = TRUE, top = 60, left = 'auto', right = 20, bottom = 'auto',
         width = 330, height = 'auto',
-        h2('Z explorer'),
+        h4('Map explorer'),
         actionButton('m2All', 'All'),
         actionButton('m2Ren', 'Renewables'),
         actionButton('m2NonRen', 'Non-Renewables'),
@@ -187,24 +187,11 @@ navbarPage('Superz', id='nav',
   ),
   
   tabPanel('About',
-    fluidRow(
-      column(8, class="card",
-        tags$div(class="card",
-          #card Start
-          tags$div(
-            class = "card-body",
-            tags$div(
-              class = "card-title",
-              tags$span("")
-            ),
-            tags$div(
-              class = "card-text", style = "height: 750px",
-              textOutput("textAbout")
-            )
-          )
-        )
+    #wellPanel(
+      tags$div(
+        HTML('Initial template used: (https://shiny.rstudio.com/gallery/superzip-example.html).<br>Author: David Shumway<br>Original data: (https://www.epa.gov/egrid/download-data).')
       )
-    )
+    #),
   )
       
 #~   conditionalPanel('false', icon('crosshair'))

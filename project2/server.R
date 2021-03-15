@@ -31,7 +31,7 @@ energyListNonRen <- list(
 shinyServer(function(input, output, session) { #, session
   # about
   output$textAbout <- renderText({ 
-    'Initial template used is here: (https://shiny.rstudio.com/gallery/superzip-example.html).'
+    'Initial template used: (https://shiny.rstudio.com/gallery/superzip-example.html).<br>Author: David Shumway<br>Original data: (https://www.epa.gov/egrid/download-data).'
   })
   
   # ill.
