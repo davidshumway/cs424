@@ -160,6 +160,7 @@ shinyServer(function(input, output, session) { #, session
     c <- subset(data1, State == state)
     list(c[0:1,]$Lat, c[0:1,]$Lng)
   }
+  `%notin%` <- Negate(`%in%`)
   
   # 1 input
   filteredData1 <- reactive({
@@ -171,6 +172,15 @@ shinyServer(function(input, output, session) { #, session
     if (input$m1Year == 2000) c <- data1
     else if (input$m1Year == 2010) c <- data2
     else c <- data3
+    if (input$m1Idled) {
+      if (input$m1Year == 2000) c <- subset(c, Lat == 0) # empty df
+      else if (input$m1Year == 2010) c <- data1[data1$Oris %notin% data2$Oris,] # data1 not in data2
+      else c <- data2[data2$Oris %notin% data3$Oris,] # data2 not in data3
+    } else if (input$m1New) {
+      if (input$m1Year == 2000) c <- subset(c, Lat == 0) # empty df
+      else if (input$m1Year == 2010) c <- data2[data2$Oris %notin% data1$Oris,] # data2 not in data1
+      else c <- data3[data3$Oris %notin% data2$Oris,] # data3 not in data2
+    }
     if (input$m1State != 'ALL') c <- subset(c, State == input$m1State)
     c <- subset(c, # size
       AnnualGen > as.numeric(input$m1Range[[1]])*1000000)
@@ -189,6 +199,20 @@ shinyServer(function(input, output, session) { #, session
     if (!'Hydro' %in% cbSource) c <- subset(c, Type != 'Hydro')
     flp('map1', c, input$m1BaseMap)
   })
+  observeEvent(input$m1Idled, {
+    if (input$m1Idled) {
+      updateSwitchInput(session, 'm1New', 'Highlight new',
+        value = FALSE)
+    }
+    filteredData1()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m1New, {
+    if (input$m1New) {
+      updateSwitchInput(session, 'm1Idled', 'Highlight idled',
+        value = FALSE)
+    }
+    filteredData1()
+  }, ignoreInit=TRUE)
   observeEvent(input$m1Range, {
     filteredData1()
   }, ignoreInit=TRUE)
@@ -266,6 +290,15 @@ shinyServer(function(input, output, session) { #, session
     if (input$m2Year == 2000) c <- data1
     else if (input$m2Year == 2010) c <- data2
     else c <- data3
+    if (input$m2Idled) {
+      if (input$m2Year == 2000) c <- subset(c, Lat == 0) # empty df
+      else if (input$m2Year == 2010) c <- data1[data1$Oris %notin% data2$Oris,] # data1 not in data2
+      else c <- data2[data2$Oris %notin% data3$Oris,] # data2 not in data3
+    } else if (input$m2New) {
+      if (input$m2Year == 2000) c <- subset(c, Lat == 0) # empty df
+      else if (input$m2Year == 2010) c <- data2[data2$Oris %notin% data1$Oris,] # data2 not in data1
+      else c <- data3[data3$Oris %notin% data2$Oris,] # data3 not in data2
+    }
     if (input$m2State != 'ALL') c <- subset(c, State == input$m2State)
     c <- subset(c, # size
       AnnualGen > as.numeric(input$m2Range[[1]])*1000000,
@@ -283,6 +316,20 @@ shinyServer(function(input, output, session) { #, session
     if (!'Hydro' %in% cbSource) c <- subset(c, Type != 'Hydro')
     flp('map2', c, input$m2BaseMap)
   })
+  observeEvent(input$m2Idled, {
+    if (input$m2Idled) { # only allows new or idled, not both
+      updateSwitchInput(session, 'm2New', 'Highlight new',
+        value = FALSE)
+    }
+    filteredData2()
+  }, ignoreInit=TRUE)
+  observeEvent(input$m2New, {
+    if (input$m2New) {
+      updateSwitchInput(session, 'm2Idled', 'Highlight idled',
+        value = FALSE)
+    }
+    filteredData2()
+  }, ignoreInit=TRUE)
   observeEvent(input$m2Range, {
     filteredData2()
   }, ignoreInit=TRUE)

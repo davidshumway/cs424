@@ -110,6 +110,12 @@ navbarPage('Superz', id='nav',
         sliderInput('m1Range', 'mWh Range:',
           min = 0, max = 32, step = 8, value = c(0, 32)
         ),
+        # idled plants: present in any previous year but not present in
+        #   selected year
+        switchInput('m1Idled', 'Highlight idled', value = FALSE),
+        # new plant: not present in any previous year but present in
+        #   selected year
+        switchInput('m1New', 'Highlight new', value = FALSE),
         actionButton('m1Reset', 'Reset Map')
       ),
       absolutePanel(id = 'controls2', class = 'panel panel-default', fixed = TRUE,
@@ -135,10 +141,12 @@ navbarPage('Superz', id='nav',
           c('OpenStreetMap', 'Stamen.Toner', 'CartoDB.Positron', 'Esri.NatGeoWorldMap'),
           multiple = FALSE, selected = 'OpenStreetMap'
         ),
-        # really buggy ??
+        # really buggy in Chrome ??
         sliderInput('m2Range', 'mWh Range:',
           min = 0, max = 32, step = 8, value = c(0, 32)
         ),
+        switchInput('m2Idled', 'Highlight idled', value = FALSE),
+        switchInput('m2New', 'Highlight new', value = FALSE),
         actionButton('m2Reset', 'Reset Map')
       )
 #~     )

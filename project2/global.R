@@ -96,7 +96,9 @@ f <- function(x) {
     # PctOther ...
     
     PctRenewables = 'Plant total renewables generation percent (resource mix)',
-    PctNonRenewables = 'Plant total nonrenewables generation percent (resource mix)'
+    PctNonRenewables = 'Plant total nonrenewables generation percent (resource mix)',
+    
+    Oris = 'DOE/EIA ORIS plant or facility code'
   )
 }
 data1 <- f(data1)
@@ -210,5 +212,14 @@ data3$IconZoomClass <- f(data3)
 # Special Illinois 2000/2018
 data1Illinois <- subset(data1, State == 'IL')
 data3Illinois <- subset(data3, State == 'IL')
+
+# idled plants:
+#  if 2018, then shows combined 00/10 output
+#  if 2010, then shows 00 output
+#  if 2000, then empty
+# new plants:
+#  if 2018, then filters 2018 based on 2010
+#  if 2010, then filters 2010 based on 2000
+#  if 2000, then empty.
 
 
