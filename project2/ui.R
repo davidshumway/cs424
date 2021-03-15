@@ -8,7 +8,7 @@ library(shinydashboard)
 library(ggplot2)
 library(DT)
 library(leaflet)
-#~ library(shinyWidgets)
+library(shinyWidgets)
 #~ library(usmap)
 #~ library(stringr)
 
@@ -95,14 +95,20 @@ navbarPage('Superz', id='nav',
         checkboxGroupInput('m1Source', 'Source:',
           choices = energyList, selected = unlist(energyList)
         ),
-#~         br(),
         selectInput('m1Year', 'Year:',
           c('2000', '2010', '2018'),
-          selected = 2000
+          multiple = FALSE, selected = 2000
         ),
         selectInput('m1State', 'State:',
           c('All states' = 'ALL', structure(state.abb, names = state.name), 'Washington, DC' = 'DC'),
           multiple = FALSE, selected = 'IL'
+        ),
+        selectInput('m1BaseMap', 'Map Type:',
+          c('OpenStreetMap', 'Stamen.Toner', 'CartoDB.Positron', 'Esri.NatGeoWorldMap'),
+          multiple = FALSE, selected = 'OpenStreetMap'
+        ),
+        sliderInput('m1Range', 'mWh Range:',
+          min = 0, max = 32, step = 8, value = c(0, 32)
         ),
         actionButton('m1Reset', 'Reset Map')
       ),
@@ -119,11 +125,19 @@ navbarPage('Superz', id='nav',
         ),
         selectInput('m2Year', 'Year:',
           c('2000', '2010', '2018'),
-          selected = 2018
+          multiple = FALSE, selected = 2018
         ),
         selectInput('m2State', 'State:',
           c('All states' = 'ALL', structure(state.abb, names = state.name), 'Washington, DC' = 'DC'),
           multiple = FALSE, selected = 'IL'
+        ),
+        selectInput('m2BaseMap', 'Map Type:',
+          c('OpenStreetMap', 'Stamen.Toner', 'CartoDB.Positron', 'Esri.NatGeoWorldMap'),
+          multiple = FALSE, selected = 'OpenStreetMap'
+        ),
+        # really buggy ??
+        sliderInput('m2Range', 'mWh Range:',
+          min = 0, max = 32, step = 8, value = c(0, 32)
         ),
         actionButton('m2Reset', 'Reset Map')
       )
@@ -133,7 +147,6 @@ navbarPage('Superz', id='nav',
   tabPanel('Data explorer (2000)',
     fluidRow(
       column(3,
-      
         #selectInput('states', 'States', c('All states'='', structure(state.abb, names=state.name), 'Washington, DC'='DC'), multiple=TRUE)
       ),
       column(3,

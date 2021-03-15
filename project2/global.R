@@ -95,8 +95,8 @@ f <- function(x) {
     PctOther2 = 'Plant other unknown / purchased fuel generation percent (resource mix)',
     # PctOther ...
     
-    PctRenewables = 'Plant total nonrenewables generation percent (resource mix)',
-    PctNonRenewables = 'Plant total renewables generation percent (resource mix)'
+    PctRenewables = 'Plant total renewables generation percent (resource mix)',
+    PctNonRenewables = 'Plant total nonrenewables generation percent (resource mix)'
   )
 }
 data1 <- f(data1)
@@ -109,11 +109,11 @@ nonnumCols <- as.vector(
 )
 for (i in names(data3)) {
   if (i %in% nonnumCols) next
-  data1[[i]] <- as.numeric(gsub(',', '', data1[[i]]))
+  data1[[i]] <- as.double(gsub('[,%]', '', data1[[i]]))
   data1[[i]] <- ifelse(is.na(data1[[i]]), 0, data1[[i]])
-  data2[[i]] <- as.numeric(gsub(',', '', data2[[i]]))
+  data2[[i]] <- as.double(gsub('[,%]', '', data2[[i]]))
   data2[[i]] <- ifelse(is.na(data2[[i]]), 0, data2[[i]])
-  data3[[i]] <- as.numeric(gsub(',', '', data3[[i]]))
+  data3[[i]] <- as.double(gsub('[,\\%]', '', data3[[i]]))
   data3[[i]] <- ifelse(is.na(data3[[i]]), 0, data3[[i]])
 }
 
@@ -143,7 +143,7 @@ data3$Other = rowSums(as.matrix(data3[,c('Other1','Other2')]))
 data3$PctOther = rowSums(as.matrix(data3[,c('PctOther1','PctOther2')]))
 data3$Max = rowMaxs(as.matrix(data3[,energyTypes]))
 
-# Determine main/assumed type
+# Assign main/assumed type
 # https://statisticsglobe.com/return-column-name-of-largest-value
 # -for-each-row-in-r
 data1$Type = colnames(data1[,energyTypes])[
@@ -170,32 +170,42 @@ data3$Color = unlist(data3$Color[data3$Type])
 # that is renewable, and the percent of the total capacity that is
 # non-renewable
 # Assumption: Capacity here refers to generation----
-#data3$Popup = paste(data3$Name, '<br>', 'Assumed type: ', data3$Type, sep = '')
-#~ for (i in 1:nrow(data3)) {
-#~     row <- data3[i,]
-#~     for (j in 1:length(data3)) {
-#~         type <- energyList[[j]][1]
-#~         if (row[[type]] > 0) {
-#~             data3[i,][['Popup']] <- paste(row[['Popup']], '<br>', type, ': ', row[[type]], sep = '')
-#~         }
-#~     }
-#~ }
-data1$Popup <- paste(data1$Name, '<br>', apply(data1[energyTypes], 1, function(x) {
-  inds <- x > 0
-  paste(energyTypes[inds], x[inds], sep = ': ', collapse = '<br>')
-}))
-data2$Popup <- paste(data2$Name, '<br>', apply(data2[energyTypes], 1, function(x) {
-  inds <- x > 0
-  paste(energyTypes[inds], x[inds], sep = ': ', collapse = '<br>')
-}))
-data3$Popup <- paste(data3$Name, '<br>', apply(data3[energyTypes], 1, function(x) {
-  inds <- x > 0
-  paste(energyTypes[inds], x[inds], sep = ': ', collapse = '<br>')
-}))
+# https://stackoverflow.com/questions/66620441/conditional-concatenate-columns/66621957#66621957
+fmt <- function(x) {
+  paste(format(round(x, 1), nsmall = 1, big.mark = ','), 'mWh')
+}
+f <- function(df) {
+  paste0(
+    df$Name, '<br>',
+    apply(df[energyTypes], 1, function(x) {
+      inds <- x > 0
+      paste(energyTypes[inds], fmt(x[inds]), sep = ': ', collapse = '<br>')
+    }),
+    '<br><span class="cgreen">%Renewable:', round(df$PctRenewables, 1), '</span>',
+    '<br><span class="cred">%NonRenewable:', round(df$PctNonRenewables, 1), '</span>'
+  )
+}
+data1$Popup <- f(data1)
+data2$Popup <- f(data2)
+data3$Popup <- f(data3)
 
+# zoom level
+# IconZoomClass
+# 31 mill largest in 2018
+f <- function(x) {
+  m <- 1000000 
+  ifelse(
+    x$AnnualGen < 8*m, 'izoom25', ifelse(
+      x$AnnualGen < 16*m, 'izoom50', ifelse(
+        x$AnnualGen < 24*m, 'izoom75', ''
+      )
+    )
+  )
+}
+data1$IconZoomClass <- f(data1) #apply(data1, 1, f)
+data2$IconZoomClass <- f(data2)
+data3$IconZoomClass <- f(data3)
 #~ print(head(data1))
-#~ print(head(data2))
-#~ print(head(data3))
 
 # Special Illinois 2000/2018
 data1Illinois <- subset(data1, State == 'IL')

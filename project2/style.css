@@ -49,3 +49,22 @@ h1, h2, h3, h4 { font-weight: 400; }
 .leaflet-container {
   background-color: white !important;
 }
+
+/* Popup highlights */
+.cred {
+	color: red;
+}
+.cgreen {
+	color: green;
+}
+
+/* icon zoom classes */
+.izoom25 {
+  zoom: 0.25;
+}
+.izoom50 {
+  zoom: 0.5;
+}
+.izoom75 {
+  zoom: 0.75
+}
