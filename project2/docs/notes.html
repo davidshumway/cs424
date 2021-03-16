@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <title>Notes</title>
+</head>
+<body>
+  <div class="container">
+<h2>CS 424 Spring 2021</h2>
+<h2>David Shumway</h2>
+<p>
+  <a href="../../index.html">Home</a>
+</p>
+<p>
+  Project 2:
+  <a href="./index.html">Introduction</a> |
+  <a href="./data.html">Data</a> |
+  Interesting notes on the data
+</p>
+
+<h4>Project 2 - "Raw Power": Interesting notes on the data</h4>
+
+<p>
+<b>Distribution of power.</b> With the advent of solar and wind energy in later years of the dataset, distribution of power appears to be more geographically spread out.
+</p>
+
+<p>
+<b>A move from coal to gas power generation.</b> As previously seen (<a href="../../project1/docs/">Project 1</a>), in the US in the last 30 years there has been an extensive shift away from coal power generation, and similarly an extensive shift toward gas power generation. This can be visualized in action in the present application. For example, while the Grand Tower power plant in Illinois generated 0.5 million mWh of electricity from coal in 2000, by 2018 it had switched to 0.6 million mWh of electricity generated from gas (Figure 1).
+</p>
+
+<p style="text-align: center; border: 1px solid #eee;">
+  <img src="./GrandTower.png" style="width: 90%;">
+  <br>
+  <b>Figure 1.</b> Comparison of the Grand Tower power plant in the years 2000 and 2018. Furthermore, in the nearby town of Paducah, the Joppa Steam power plant is pictured as decreasing in power generation from 2000 to 2010. Specifically, the Joppa Steam power plant reduced its power production by roughly 50% in the years 2000 to 2018, going from 8 million mWh of coal electricity produced in 2000 to 4 million mWh of coal electricity produced in 2018.
+</p>
+
+<p>
+<b>Coarse-grained location data in 2000 dataset.</b> Along with a number of plants that had N/A for their geocoordinate (see <a href="./data.html">here</a>), as a whole geocoordinates in the 2000 dataset appear to be coarse-grained. For example, in the Chicago, Illinois region, a single Latitude/Longitude geocoordiate (41.8119, -87.8940) is attached to 32 separate plants (Figures 2-3). Later inspection, through the use of a Jupyter notebook, highlights this coarse-grained aspect of the 2000 dataset: Only 44 percent of power plants have unique geocoordinates in the 2000 dataset, as opposed to roughly 97 percent and 99 percent in the 2010 and 2018 datasets, respectively (Table 1).
+</p>
+
+<p style="text-align: center; border: 1px solid #eee;">
+  <img src="./Coarse1.png" style="width: 90%;">
+  <br>
+  <b>Figure 2.</b> Exploration of a reused geocoordinate in the 2000 dataset through use of the dataset explorer tab of the application.
+</p>
+<p style="text-align: center; border: 1px solid #eee;">
+  <img src="./Coarse2.png" style="width: 90%;">
+  <br>
+  <b>Figure 3.</b> A view of 32 power plants with identical geocoordinates in the 2000 dataset. The general location shown is the Chicago, Illinois region. In later datasets, the power plants have more precise geocoordinates. In fact, in later datasets no power plant is located at this exact geocoordinate (41.8119, -87.8040).
+</p>
+
+<table style="border: 1px solid #eee; width: 100%;">
+  <caption><b>Table1.</b> Only 44 percent of power plants have unique geocoordinates in the 2000 dataset, as opposed to roughly 97 percent and 99 percent in the 2010 and 2018 datasets, respectively.</caption>
+<thead>
+  <th>Dataset</th>
+  <th># unique Lat / Lng</th>
+  <th># rows</th>
+  <th>Percent unique Lat / Lng</th>
+</thead>
+<tr>
+  <td>2000</td>
+  <td>2031</td>
+  <td>4613</td>
+  <td>44.0%</td>
+</tr>
+<tr>
+  <td>2010</td>
+  <td>5254</td>
+  <td>5393</td>
+  <td>97.4%</td>
+</tr>
+<tr>
+  <td>2018</td>
+  <td>8501</td>
+  <td>8604</td>
+  <td>98.8%</td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>

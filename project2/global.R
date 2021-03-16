@@ -204,10 +204,9 @@ f <- function(x) {
     )
   )
 }
-data1$IconZoomClass <- f(data1) #apply(data1, 1, f)
+data1$IconZoomClass <- f(data1)
 data2$IconZoomClass <- f(data2)
 data3$IconZoomClass <- f(data3)
-#~ print(head(data1))
 
 # Special Illinois 2000/2018
 data1Illinois <- subset(data1, State == 'IL')
