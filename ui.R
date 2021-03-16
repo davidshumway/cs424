@@ -35,29 +35,6 @@ data$STATE <- as.factor(data$STATE)
 data <- data[!(data$GENERATION..Megawatthours. < 0),]
 names(data)[names(data) == 'GENERATION..Megawatthours.'] <- 'GEN'
 
-
-
-# Data fix: some states have no entry for some types of energy,
-#  such as solar, especially early in the data, e.g., 1990.
-#  This causes colors to be different when comparing across different
-#  years, same state. E.g., 2019 IL and 1990 IL have a different
-#  color scheme!
-#~ print(data$ENERGY.SOURCE)
-#~ for(i in 1990:2019) {       # for-loop over rows
-#~   for (j in data$STATE) {
-#~     for (k in data$ENERGY.SOURCE) {
-#~       if (!data[i][j][k])
-#~         data[i][j][k] = 0
-#~     }
-#~   }
-#~ }
-#~ for(i in 1:nrow(data)) {       # for-loop over rows
-#~   print(data[i,]$ENERGY.SOURCE)
-#~   break
-#~   #if (data[i,]$
-#~   #data[i, ] <- data[i, ] - 100
-#~ }
-
 states = unique(data$STATE)
 years2= unique(data$YEAR)
 years = unique(data$YEAR)
