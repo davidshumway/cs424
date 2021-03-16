@@ -116,12 +116,13 @@ shinyServer(function(input, output, session) { #, session
     # AnnualGen
     m = 1000000
     ifelse(
-      ag < 8*m, '4', ifelse(
-        ag < 16*m, '8', ifelse(
-          ag < 24*m, '12', '16'
+      ag < 500000, '4', ifelse(
+        ag < 8*m, '6', ifelse(
+          ag < 16*m, '12', ifelse(
+            ag < 24*m, '18', '22'
+          )
         )
-      )
-    )
+    ))
   }
   fcol <- function(t) {
     # t: Type
@@ -422,8 +423,8 @@ shinyServer(function(input, output, session) { #, session
       ) %>%
       addLegend(position = 'topright', colors = xc, labels = xl, opacity = 1) %>%
       addLegendCustom(colors = c('blue', 'blue', 'blue'),
-        labels = c('<8 mil mWh', '<16 mil mWh', '<24 mil mWh', '>24 mil mWh'),
-        sizes = c(4, 8, 12, 16))
+        labels = c('<0.5 mil mWh', '<6 mil mWh', '<12 mil mWh', '<18 mil mWh', '>22 mil mWh'),
+        sizes = c(4, 6, 12, 18, 22))
   })
   output$map2 <- renderLeaflet({
     leaflet(data3Illinois) %>%
@@ -437,8 +438,8 @@ shinyServer(function(input, output, session) { #, session
       ) %>%
       addLegend(colors = xc, labels = xl, opacity = 1) %>%
       addLegendCustom(colors = c('blue', 'blue', 'blue'),
-        labels = c('<8 mil mWh', '<16 mil mWh', '<24 mil mWh', '>24 mil mWh'),
-        sizes = c(4, 8, 12, 16))
+        labels = c('<0.5 mil mWh', '<6 mil mWh', '<12 mil mWh', '<18 mil mWh', '>22 mil mWh'),
+        sizes = c(4, 6, 12, 18, 22))
   })
   redrawMap1 <- reactive({
     output$map1 <- renderLeaflet({
@@ -453,8 +454,8 @@ shinyServer(function(input, output, session) { #, session
         ) %>%
         addLegend(colors = xc, labels = xl, opacity = 1) %>%
         addLegendCustom(colors = c('blue', 'blue', 'blue'),
-          labels = c('<8 mil mWh', '<16 mil mWh', '<24 mil mWh', '>24 mil mWh'),
-          sizes = c(4, 8, 12, 16))
+          labels = c('<0.5 mil mWh', '<6 mil mWh', '<12 mil mWh', '<18 mil mWh', '>22 mil mWh'),
+          sizes = c(4, 6, 12, 18, 22))
     })
   })
   redrawMap2 <- reactive({
@@ -470,8 +471,8 @@ shinyServer(function(input, output, session) { #, session
         ) %>%
         addLegend(colors = xc, labels = xl, opacity = 1) %>%
         addLegendCustom(colors = c('blue', 'blue', 'blue'),
-          labels = c('<8 mil mWh', '<16 mil mWh', '<24 mil mWh', '>24 mil mWh'),
-          sizes = c(4, 8, 12, 16))
+          labels = c('<0.5 mil mWh', '<6 mil mWh', '<12 mil mWh', '<18 mil mWh', '>22 mil mWh'),
+          sizes = c(4, 6, 12, 18, 22))
     })
   })
   

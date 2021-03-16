@@ -208,6 +208,15 @@ data1$IconZoomClass <- f(data1)
 data2$IconZoomClass <- f(data2)
 data3$IconZoomClass <- f(data3)
 
+# Apparently, jitter is a solution to identical LL:
+# https://stackoverflow.com/questions/36469379/multiple-markers-on-same-
+# coordinate
+library(mapview)
+library(sp)
+data1$Lat <- jitter(data1$Lat, factor = 0.01)
+data1$Lng <- jitter(data1$Lng, factor = 0.01)
+
+
 # Special Illinois 2000/2018
 data1Illinois <- subset(data1, State == 'IL')
 data3Illinois <- subset(data3, State == 'IL')
