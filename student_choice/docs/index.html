@@ -108,6 +108,22 @@ Functionality. The application includes five tabs: Introduction, Starting with R
 
 <p>Three 3-D plots are available for representing Principal Component Analysis (Figure 70), Principal Coordinates Analysis (Figure 71), and t-Distributed Stochastic Neighbor Embedding (Figure 72). X-, Y-, and Z-axes are labeled as Dim1, Dim2, and Dim3, respectively. Values for the axes range from -30 to 15 in the PCA plot, -0.4 to 0.5 in the PCoA plot, and -40 to 50 in the t-Distributed plot, respectively, although it is not clear whether these axes values change based on the data under consideration. Markers on the plot represent spectra samples in the dendrogram with coloring for markers tied to the clustering used in the dendrogram (i.e. based on cut height or number of groups). Mousing over a marker on the plot provides a pop-up for the marker displaying the marker's respective sample ID along with highlights of the grey chart lines showing exactly where the marker lies in the 3-D space. For some unknown reason, hovering over a marker is a challenging task that does not always work as expected.</p>
 
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(70).png" />
+  <br />
+  Figure 70. Principal Component Analysis.
+</div>
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(71).png" />
+  <br />
+  Figure 71. Principal Coordinates Analysis.
+</div>
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(72).png" />
+  <br />
+  Figure 72. t-Distributed Stochastic Neighbor Embedding.
+</div>
+
 <p><b>Improvement of 3-D plots:</b> Hovering over marker points is challenging and not always successful and therefore can be improved. Labeling of the axes values would also be helpful. Finally, the 3-D charts are displayed within a pop-up menu which has a limited size. The pop-up menu could be made to be expandable and/or could include a full-screen mode to enable a larger viewing space.</p>
 
 <p><b>Protein Data Analysis improvements:</b> The left-hand side menu is somewhat confusing as it is interacting with three separate plots (mirror, dendrogram, and coordinates plots) while simultaneously providing options and feedback for all or only some of the plots. When the Dendrogram tab is selected, at the top of the tab a statement is fixed in place reading: "The following samples were removed because they contained no peaks:". This statement appears to always be followed by empty space. It would be better to remove this statement and show it only in the cases where samples were actually in fact removed, or to change it to state "In the diagram below, all samples are present (i.e. no samples were removed due to zero peaks being present in the given sample)."</p>
