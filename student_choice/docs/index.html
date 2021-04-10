@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <title>Student Choice: Visualizing small molecule and protein data with IDBac</title>
+    <style type="text/css">
+    img {width:100%;}
+    div.img {border:1px solid #555; margin: 20px 2px; padding:4px}
+    </style>
+</head>
+<body>
+<body>
+  <div class="container">
+<h2>CS 424 Spring 2021</h2>
+<h2>David Shumway</h2>
+<p>
+  <a href="../../index.html">Home</a>
+</p>
+
+<h4>Student Choice: Visualizing small molecule and protein data with IDBac</h4>
+
+<p><b>Overview.</b> The IDBac application and visualizations can be used by researchers from many domains to aid in differentiating between closely related bacteria based on small molecules produced by the bacteria (Fig. 53).</p>
+
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(53).png" />
+  <br />
+  Figure 53. Introduction page of the IDBac application.
+</div>
+
+<p><b>Availability.</b> The latest version of IDBac is online here: (<a href="https://github.com/chasemc/IDBacApp">https://github.com/chasemc/IDBacApp</a>). A copy of sample files for the application and a Windows binary is here: (<a href="https://chasemc.github.io/IDBac/">https://chasemc.github.io/IDBac/</a>).<p>
+
+<p>IDBac is available as a Shiny app which is packaged into a Windows desktop application via the popular Electron framework and electricShine. Electron is a cross-platform application wherein programs developed in Javascript are made available on a variety of applications. electricShine is an extension of Electron, created by the author of IDBac, which extends Electron by including support for R and Shiny applications.
+Functionality. The application includes five tabs: Introduction, Starting with Raw Data, Work with Previous Experiments, Protein Data Analysis, and Small Molecule Analysis. The final two tabs (Protein Data Analysis and Small Molecule Analysis) are only visible after the program has loaded an experiment containing valid spectra.</p>
+
+<p><b>Tab: Introduction.</b> The introduction page provides an overview of the application, citation information, as well as a file-open menu for selecting the root directory from which to save and later retrieve application experiments.</p>
+
+<p><b>Tab: Starting with Raw Data.</b> Users can load both standardized and proprietary raw mass spectrometry data. Two common proprietary and two common standardized formats are offered out of the many proprietary and common standardized formats presently available.</p>
+
+<p><b>Tab: Work with Previous Experiments.</b> Users can load and modify previous experiments, modify metadata within an experiment, extract a subset of spectra within an experiment into a new experiment, and extract a subset of spectra within an experiment to be exported to the standardized mzXML spectra exchange format.</p>
+
+<p><b>Experiments.</b> The application utilizes a SQLite database to save experiments run by users of the application. Each experiment initially consists of extracting two sets of data from spectra files: first, limited metadata regarding presence and type information for bacterial identification (e.g. phylogenetic classification data such as Kingdom, Phylum, and Species); and second, standardized spectra data such as mass-to-charge and intensity values, minimum and maximum mass values, and various mass spectrometry-specific machine settings. Within the application, users can modify the limited metadata, for example, to add the type of species represented in the spectra, change Genbank Accession ID or NCBI Taxonomy ID, and so forth (Figure 55). Changes to spectra data is not handled within the application. Further use of experiments is limited to either exporting the metadata and spectra data back to the standard mzXML format, or taking a subset of the spectra within one experiment and transferring it to another experiment. Any work performed via visual analysis (i.e. within the Protein Data Analysis and Small Molecule Analysis tabs) is not saved within the experiment framework, although in most cases it is possible to either export PNG images of visualizations (usually with help from the Plotly library), and/or data in CSV format containing data represented in the present state of the application.</p>
+
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(55).png" />
+  <br />
+  Figure 55. A table for editing spectra metadata within the experiment.
+</div>
+
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(59).png" />
+  <br />
+  Figure 59. A summary table displays the number of protein and small molecule replicates for each sample. Within the application, mostly behind the scenes, these protein and small molecule replicate spectra are collapsed into a single spectra representing the sample's protein and small molecules, respectively. For example, 8 protein spectra for sample B-10 are collapsed into a single protein spectra to be used in the Protein Data Analysis portion of the application.
+</div>
+
+
+<p><b>Visualizations.</b> Visualizations are available within the final two tabs of the application, namely, Protein Data Analysis and Small Molecule Analysis.</p>
+
+<p><b>Tab: Protein Data Analysis.</b> Three types of visualizations are available within the Protein Data Analysis tab for visualizing spectrum protein data: Mirror Plot, Dendrogram, and a Principal Component / Coordinates Analysis and t-Distributed Stochastic Neighbor Embedding plot.</p>
+
+<p>A mirror plot allows for a side-by-side (or more specifically up-versus-down) comparison of the protein area any two samples (Figure 60). The range of 2,000 to 20,000 m/z (mass-to-charge ratio) are represented on the X-axis of the plot. The Y-axis encodes the Intensity value of the spectrum. The negative Y-axis is misleading as in fact the mirrored spectrum (and all mass spectrums) contain only positive intensity values. Hovering over the plot causes a pop-up box to appear showing the Intensity and m/z values at the present location for each of the two given spectra. A note about the chart states that blue bars represent matching peaks between spectra while red bars represent a peak in only one of the two spectra. A further grey bar is present in the plot but it's purpose is not provided. Furthermore, it is not specified why blue and red bars appear above the X-axis while grey bars appear below it. Within each pop-up box, the third row of data in the box should specify the sample but it is empty. Perhaps the intent was to add the sample's ID (e.g. "B-10") to this field? If so, this was apparently not followed through on during application development. Download of the plot can be made through SVG and PNG formats. Clicking on the plot produces a window-select tool for selecting a portion of the spectrum to zoom in on. A set of five Peak Retention Settings allow for on-the-fly adjustment of the peaks within each spectrum displayed in plot. Information regarding the meaning of bar height is not provided.</p>
+
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(60).png" />
+  <br />
+  Figure 60. A mirror plot comparing averaged protein spectra for two samples.
+</div>
+
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(62).png" />
+  <br />
+  Figure 63. A zoomed-in section of the mirror plot when selecting a low peak presence threshold setting. With a low peak presence threshold (e.g. 10%), only a few of the replicates of a given spectrum must contain a peak at any given location for the peak labeled as a peak of importance. For example, with 10 replicates of a given sample and a 20% peak presence threshold, only 2 of the 10 replicates would need to contain the same peak for the peak to be kept as a peak of importance.
+</div>
+
+<p><b>Mirror plot improvements:</b> The Y-axis should contain only positive values. That is, the mirrored secondary plot should have a Y-axis with positive rather than negative values. Grey bars should be notated as to their purpose. Within the pop-boxes, "Sample:" should be either filled in or removed. Bars of interest (blue, red, and grey) could be made clickable in order to show more succinctly the exactly values and details of correspondences. Toward this end, a secondary table listing details of these correspondences would be useful. The plot is mostly easy to interact with and responsive. However, when editing the Peak Retention Settings, the plot can sometimes take some time to load, and during these loading times no status information is provided to the user. An improvement would thus be to both speed up on-the-fly adjustments to the plot and output a display of the present status of update. The width of peak bars (blue, red, and grey) appears to be the same throughout the mirror plot. However, a note could be displayed confirming that width of the bars is non-important. Conversely, bar width could be utilized to encode further information about the data. More importantly, information regarding the meaning of bar height should be provided, as well as the reason for having blue and red bars above the X-axis and grey bars below it. Finally, a note states that the binning algorithm is different for the mirror and dendrogram plots but further information such as which algorithm is used is not provided. Such information may be available at the application's online documentation but this is not stated.</p>
+
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(62).png" />
+  <br />
+  Figure 62. A zoomed-in section of the protein mirror-plot while hovering nearby to a blue bar. Bars within the plot are non-interactive (i.e. via hover or click).
+</div>
+
+<p>A dendrogram provides a view of protein similarity between many samples. Mouse interaction (click and hover) is not incorporated in the dendrogram plot (Figure 64). The Y-axis of the dendrogram relates individual samples. The X-axis of the dendrogram appears to show the score of the distance algorithm, but this is unclear. For example, in Figure 64 the X-axis has a connection made in the region of 1.5, a value which exceeds the cosine similarity score of spectra. Cosine score of spectra vectors falls between a range of 0 (the vectors are orthogonal) to 1 (the vectors are identical)[1]. A bootstrapping measurement is included as a measure of cluster reliability and is shown on the plot in small blue text. Various distance measurements between spectra vectors (e.g. cosine, euclidean, maximum, etc.) and hierarchical clustering algorithms (e.g. ward.D, single, complete, etc.) can be selected. In addition to use of the left-hand side menu, further alteration of the dendrogram can be made using three overlayed menus: Adjust dendrogram lines, Adjust dendrogram labels, and Selection of a metadata category to incorporate into the Y-axis (Figure 67 and Figure 68). Clustering of the dendrogram can be made through the two Adjustment panels with the option to cluster into X number of groups (e.g. 3) or cluster based on cutting the dendrogram at a given height (e.g. 0.8).</p>
+
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(64).png" />
+  <br />
+  Figure 64. A dendrogram comparing 16 samples built using cosine distance and the ward.D clustering algorithm. A bootstrapping measure is also displayed to allow the user to assess the clustering quality.
+</div>
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(67).png" />
+  <br />
+  Figure 67. Example use of three overlay panels to adjust labels, lines, and display of a singular metadata attribute. Cluster by group is selected.
+</div>
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(68).png" />
+  <br />
+  Figure 68. Example use of three overlay panels to adjust labels, lines, and display of a singular metadata attribute. Cluster by cut height is selected.
+</div>
+
+<p><b>Dendrogram improvements:</b> Mouse interaction could be incorporated into the plot. In terms of distance and clustering, although this is certainly useful, it would be interesting to be able to compare two or more dendrograms side-by-side in order to compare and contrast the various distance measures and clustering techniques. The X-axis should be labeled. The bootstrapping measurement could be highlighted in some way in order to show high and low bootstrapping measures, for example, to let the user know that a particular section of the clustering has a particularly weak reliability. One way to achieve this would be to encode the measurement text or even the lines on the plot using a color scale. If color were chosen to encode this measure, then care would need to be taken when lines on the plot were colored during group clustering. Of ten attributes shared between the two Adjustment panels, only two are unique (line width, label size), while the other eight could be reduced in half (i.e. the eight of are duplicates). Specifically, it is not helpful to cut or group the dendrogram for the labels but not for the lines as this would produce a mismatch between the two.</p>
+
+<p>Three 3-D plots are available for representing Principal Component Analysis (Figure 70), Principal Coordinates Analysis (Figure 71), and t-Distributed Stochastic Neighbor Embedding (Figure 72). X-, Y-, and Z-axes are labeled as Dim1, Dim2, and Dim3, respectively. Values for the axes range from -30 to 15 in the PCA plot, -0.4 to 0.5 in the PCoA plot, and -40 to 50 in the t-Distributed plot, respectively, although it is not clear whether these axes values change based on the data under consideration. Markers on the plot represent spectra samples in the dendrogram with coloring for markers tied to the clustering used in the dendrogram (i.e. based on cut height or number of groups). Mousing over a marker on the plot provides a pop-up for the marker displaying the marker's respective sample ID along with highlights of the grey chart lines showing exactly where the marker lies in the 3-D space. For some unknown reason, hovering over a marker is a challenging task that does not always work as expected.</p>
+
+<p><b>Improvement of 3-D plots:</b> Hovering over marker points is challenging and not always successful and therefore can be improved. Labeling of the axes values would also be helpful. Finally, the 3-D charts are displayed within a pop-up menu which has a limited size. The pop-up menu could be made to be expandable and/or could include a full-screen mode to enable a larger viewing space.</p>
+
+<p><b>Protein Data Analysis improvements:</b> The left-hand side menu is somewhat confusing as it is interacting with three separate plots (mirror, dendrogram, and coordinates plots) while simultaneously providing options and feedback for all or only some of the plots. When the Dendrogram tab is selected, at the top of the tab a statement is fixed in place reading: "The following samples were removed because they contained no peaks:". This statement appears to always be followed by empty space. It would be better to remove this statement and show it only in the cases where samples were actually in fact removed, or to change it to state "In the diagram below, all samples are present (i.e. no samples were removed due to zero peaks being present in the given sample)."</p>
+
+<p><b>Tab: Small Molecule Analysis.</b> The Small Molecule Analysis tab includes four visualizations: Protein Dendrogram, Small Molecule Molecular Association Network (MAN), Small Molecule Principal Component Analysis (PCA), and Small Molecule Mirror Plot. The Protein Dendrogram is a copy from the dendrogram created in the previous (Protein Data Analysis) tab.</p>
+
+<p>The Small Molecule MAN includes peaks and sample data as selected through the Protein Dendrogram (Figure 76 and 75). Selection on the dendrogram is done using a sliding window tool to select a range of sample IDs within the dendrogram to be shown on the MAN. Given the window tool, it is thus not possible to select disparate sample IDs, i.e., sample IDs which are not side-by-side to each other on the dendrogram. The MAN and dendrogram represent one of the few linked views in the application. The MAN provides a simplified overview of a molecule association networks. m/z values that are represented in a single sample are cluster together. Two coloring options are available for the MAN. Only black appears to be available for coloring of nodes in the PCA. The Small Molecule Mirror Plot visualization is similar to the mirror plot in the Protein Analysis tab but has some notable differences. For instance, there is no tools menu available in the SM mirror plot, the unlabeled blue, red, and grey bars are replaced with blue and red rectangles drawn around peaks of importance, and a draggable window is used to select a portion of the spectra to zoom into.</p>
+
+<p><b>Improvements to Small Molecule Analysis visualizations:</b> As the purpose for the SM mirror plot visualization is to aid in decision-making regarding the other visualizations, it might be helpful to separate it from the tabbed structure. Many times when using this tab, updates to the visualizations seem to lag and sometimes not even render. Additional data could be represented by the MAN. One issue with selecting to color the MAN by dendrogram colors is that the small nodes in the MAN all turn to black. This could be improved by changing the node back to the color of the main nodes. Attempting to move the nodes around in the MAN for a clearer view is generally not very helpful as the small nodes do not follow along with the big nodes. One improvement would thus be to have the small nodes follow the large nodes upon dragging. With more than a few samples represented, the center of the MAN quickly becomes overwhelmed by grey lines. Another improvement might thus be to represent the MAN in 3-D, which might improve the ability to discern content in the plot. Another improvement might be to add color to the nodes in the PCA, similar to the PCA coloring in the Protein Analysis tab.</p>
+
+<p>As before, the Protein Dendrogram is missing a label on its X-Axis.</p>
+
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(76).png" />
+  <br />
+  Figure 76. Small Molecule MAN. Hovering over a central node displays the node's sample ID.
+</div>
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(75).png" />
+  <br />
+  Figure 75. Small Molecule MAN. Hovering over a minor node displays the node's m/z value.
+</div>
+
+<p><b>Portability.</b> Although the application is built as a Shiny app, the application's author does not go so far as making it available as a traditional Shiny application. Furthermore, porting the application to environments other than Windows, or even to run as a traditional Shiny application, is a non-trivial task. Portability issues include hard-coded Windows directories names and directory structuring (e.g. the use of forward-slashes between directories), a number of file-open dialog boxes which require a desktop environment and thus fail to function properly in a traditional headless server process, and built-in use of an SQLite database. Regarding the SQLite database issue, this appears to cause issues when attempting to run the application as a traditional Shiny application.</p>
+
+<p>In order to use the program on Linux or Mac, two paths are available: Either use Electron to generate a Mac or Linux binary, or rebuild the application as a traditional Shiny application. For the time being, only rebuilding the application as a traditional Shiny application has been attempted. A future work is thus to attempt to generate a Mac or Linux binary using the Electron application generation path. The attempt to run the application as a traditional Shiny application has thus far been somewhat successful but still fails to fully run properly. On the whole, the application runs as expected except for the generation of certain plots and figures, which either hang for long periods before being drawn, or altogether never render.</p>
+
+<p><b>Program crashes.</b> The program crashes in a variety of scenarios, such as updating metadata on an experiment. Generally, there appear to be two types of crashes: fatal and non-fatal. Fatal crashes generally result in the program stopping in place without any feedback provided to the user on the reason for the crash. These crashes appear to crash Shiny's server process as the background of the app turns grey while still allowing the user a small amount of navigation within the dormant front-end. Non-fatal crashes within the application typically report back feedback in the form of an application trace error, such as "Error: Non-conforming arrays", and are generally unhelpful in diagnosing the issue.</p>
+
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(50).png" />
+  <br />
+  Figure 50. A crash of the application after adding new metadata columns titled "ha aha!" and "ha" and then asking the program to "save" the experiment (i.e. perform an update to its backend SQLite data).
+</div>
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(51).png" />
+  <br />
+  Figure 51. After adding five samples to the dendrogram, simply selecting Open PCA Plot crashes the program. No feedback is provided for the crash.
+</div>
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(45).png" />
+  <br />
+  Figure 45. The application allows a user to edit metadata of an experiment before an experiment has been selected, leading to unexpected behavior. In this case, the application crashed.
+</div>
+
+<h4>Rough edges</h4>
+
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(48).png" />
+  <br />
+  Figure 48. Transferring samples from previous experiments to new or other experiment. In this case, an initial experiment has already been selected. Later, while on the the same page of the app, the user is instructed to re-select the experiment before continuing. This makes the initial selection a waste of the user's time.
+  <br />
+  Although in this screenshot, the interface purports to allowing transfer of experiments to other experiments, upon further inspection it appears the app only allows creation of new experiments from old ones. In order to transfer spectra from one experiment to another, the user must first export the spectra to mzXML format, then go back to the "Starting with Raw Data" tab of the app. Thus, combining various spectra into an experiment within the application itself is not supported but always requires starting with the user first selecting the various raw mzXML files.
+</div>
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(46).png" />
+  <br />
+  Figure 46. In this case, exporting data from a preexisting experiment requires reconfirming the experiment to be exported even though the experiment is already, as depicted in the top left of the screenshot.
+</div>
+<div class="img">
+  <img src="images/╞┴─╗╜╪═╝(49).png" />
+  <br />
+  Figure 49. In some cases, the app is non-informative in regard to user input. In this case, clicking the Process Data button without filling in any other fields does not result in any output or errors, leading to a feeling of detachment within the app. In this particular case, the expectation of the user might be to have a warning message prompting for missing information to be input by the user before continuing.
+</div>
+
+<h4>General improvements</h4>
+
+<p><b>Screen space.</b> Screen space is not always prioritized within the application. For example, in figure 55, the left 30% of the screen could be recaptured after the user has selected an experiment, thus allowing for better space usage by the metadata table editor. Both the Protein Data Analysis and Small Molecule Analysis tabs have similar left-hand side menus which likewise occupy 30% of screen space (Figures 56 and 58). Including an option to minimize these menus would enable the user to recapture screen space for the subsequent content and visualizations.</p>
+
+<p><b>Linked Views.</b> Generally speaking, linked views are only lightly used within the application. One notable exception to this is the Protein Dendrogram on the SM analysis tab which is connected abstractly to the Small Molecule MAN. Another linked view are the 3-D plots in the Protein Analysis tab which shares clustering color with the protein dendrogram.</p>
+
+<p><b>Hidden Views.</b> On each tab, most of the views are hidden from each other by default. In some cases, the views can be seen together (such as the 3-D plots and the dendrogram on the Protein Analysis tab) whereas in other cases the views are required to stay separate (such as the mirror plots and dendrogram on the Protein Analysis tab and the mirror plots and the MAN on the Small Molecule Analysis tab). Given there are few visualizations, there is ample screen space to show all views concurrently, especially if screen space is maximized as previous mentioned above.</p>
+
+<p>
+<b>References</b>
+<br />
+[1] https://www.nonlinear.com/progenesis/qi/v1.0/faq/database-fragmentation-algorithm.aspx
+</p>
+
+
+
+
+
+
+
+</body>
+</html>
