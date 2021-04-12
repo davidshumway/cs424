@@ -21,7 +21,7 @@
 
 <h4>Student Choice: Visualizing small molecule and protein data with IDBac</h4>
 
-<p><b>Overview.</b> The IDBac application and visualizations can be used by researchers from many domains to aid in differentiating between closely related bacteria based on small molecules produced by the bacteria (Fig. 53).</p>
+<p><b>Overview.</b> The IDBac application and visualizations can be used by researchers from many domains to aid in differentiating between closely related bacteria based on small molecules produced by the bacteria.</p>
 
 <p>
   <iframe width="560" height="315" src="https://www.youtube.com/embed/hpMrAgm0pHg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -37,7 +37,16 @@
 <p><b>Availability.</b> The latest version of IDBac is online here: (<a href="https://github.com/chasemc/IDBacApp">https://github.com/chasemc/IDBacApp</a>). A copy of sample files for the application and a Windows binary is here: (<a href="https://chasemc.github.io/IDBac/">https://chasemc.github.io/IDBac/</a>).<p>
 
 <p>IDBac is available as a Shiny app which is packaged into a Windows desktop application via the popular Electron framework and electricShine. Electron is a cross-platform application wherein programs developed in Javascript are made available on a variety of applications. electricShine is an extension of Electron, created by the author of IDBac, which extends Electron by including support for R and Shiny applications.
-Functionality. The application includes five tabs: Introduction, Starting with Raw Data, Work with Previous Experiments, Protein Data Analysis, and Small Molecule Analysis. The final two tabs (Protein Data Analysis and Small Molecule Analysis) are only visible after the program has loaded an experiment containing valid spectra.</p>
+Functionality.</p>
+
+<h4>Visualization Overview</h4>
+<p>The IDBac application and visualizations can be used by researchers from many domains to aid in differentiating between closely related bacteria based on small molecules produced by the bacteria (Fig. 53).</p>
+
+<p>Data to the visualization is of the form of matrix-assisted laser desorption ionization time-of-flight mass spectrometry (MALDI-TOF) spectra files. MALDI-TOF mass spectrometry is a research tool used in various domains including biology, medicine, drug discovery, ecology, and environmental modeling and has been used to rapidly identify bacteria, fungi, and viruses [2]. Samples are grown overnight in a lab and later mixed with a chremical matrix to break down the microbes, added to a plate, and bombarded with laser shots. The molecules are then accelerated into a flight tube subjected to a vacuum until they reach a detector, with smaller ions reaching the detector before larger ions. The result is a mass spectrum, essentially a vector of X/Y coordinates composed of a mass-to-charge ratio (M/Z) on the X-axis and an intensity value on the Y-axis. Later comparison of spectra with a database of known microbes can  result in identification of species or genus level identification. This quick turnoround time for identification of bacteria (less than 24 hours) is cheaper and faster than traditional identification methods, which may typically cost $100 and take days or weeks to complete.</p>
+
+<p>The IDBac visualization is made specifically for cases where organisms are very similar and may differ only in the small molecules produced by the organism. MALDI-TOF spectra can be split into two partes: large and small molecules. Small molecules are those which arrive at the detector first and are in the range of 0-2000 M/Z. Large molecules are those which arive later, and are in the range 2000-20000 M/Z. Researchers can thus identify the organism present by exploring the large molecules section of the spectra, which thus contains e.g. proteins, and then later compare which small molecules are also present by exploring the small molecule range of the spectra, which thus contains e.g. chemical compounds.</p>
+
+<p>The visualization is separted into five tabs: Introduction, Starting with Raw Data, Work with Previous Experiments, Protein Data Analysis, and Small Molecule Analysis. The final two tabs (Protein Data Analysis and Small Molecule Analysis) are only visible after the program has loaded an experiment containing valid spectra.</p>
 
 <p><b>Tab: Introduction.</b> The introduction page provides an overview of the application, citation information, as well as a file-open menu for selecting the root directory from which to save and later retrieve application experiments.</p>
 
@@ -124,7 +133,7 @@ Functionality. The application includes five tabs: Introduction, Starting with R
   Figure 72. t-Distributed Stochastic Neighbor Embedding.
 </div>
 
-<p><b>Improvement of 3-D plots:</b> Hovering over marker points is challenging and not always successful and therefore can be improved. Labeling of the axes values would also be helpful. Finally, the 3-D charts are displayed within a pop-up menu which has a limited size. The pop-up menu could be made to be expandable and/or could include a full-screen mode to enable a larger viewing space.</p>
+<p><b>Improvement of 3-D plots:</b> Hovering over marker points is challenging and not always successful and therefore can be improved. Labeling of the axes values would also be helpful. Finally, the 3-D charts are displayed within a pop-up menu which has a limited size. The pop-up menu could be made to be expandable and/or could include a full-screen mode to enable a larger viewing space. Finally, the 3-D plot views are linked to the dendrogram via coloring of groupings made in the dendrogram. But the linking could go further by linking mouse hover between the views. The 3-D views are also not linked to the mirror plots in any way.</p>
 
 <p><b>Protein Data Analysis improvements:</b> The left-hand side menu is somewhat confusing as it is interacting with three separate plots (mirror, dendrogram, and coordinates plots) while simultaneously providing options and feedback for all or only some of the plots. When the Dendrogram tab is selected, at the top of the tab a statement is fixed in place reading: "The following samples were removed because they contained no peaks:". This statement appears to always be followed by empty space. It would be better to remove this statement and show it only in the cases where samples were actually in fact removed, or to change it to state "In the diagram below, all samples are present (i.e. no samples were removed due to zero peaks being present in the given sample)."</p>
 
@@ -201,6 +210,8 @@ Functionality. The application includes five tabs: Introduction, Starting with R
 <b>References</b>
 <br />
 [1] https://www.nonlinear.com/progenesis/qi/v1.0/faq/database-fragmentation-algorithm.aspx
+<br />
+[2] Croxatto, A., Prod'hom, G., &amp; Greub, G. (2012). Applications of MALDI-TOF mass spectrometry in clinical diagnostic microbiology. <i>FEMS microbiology reviews, 36</i>(2), 380-407.
 </p>
 
 
