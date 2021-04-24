@@ -1,21 +1,16 @@
 ## ui.R
 ## Author: David Shumway
 ## Initial template is from here:
-## https://shiny.rstudio.com/gallery/superzip-example.html
+##   https://shiny.rstudio.com/gallery/superzip-example.html
 
-#~ library(shiny)
 library(shinydashboard)
 library(ggplot2)
 library(DT)
 library(leaflet)
 library(shinyWidgets)
-#~ library(usmap)
-#~ library(stringr)
 
 # Leaflet bindings are a bit slow; for now we'll just sample to compensate
 set.seed(100)
-
-
 
 navbarPage('Raw Power', id='nav',
 
@@ -23,9 +18,7 @@ navbarPage('Raw Power', id='nav',
     div(class = 'outer',
 
       tags$head(
-        # Include our custom CSS
         includeCSS('style.css'),
-#~         includeCSS('bootstrap.min.css'),
         includeScript('gomap.js')
       ),
 
@@ -50,28 +43,11 @@ navbarPage('Raw Power', id='nav',
         br(),
         actionButton('illReset', 'Reset Map')
 
-        #selectInput('color', 'Color', vars),
-        
-        #selectInput('size', 'Size', vars, selected = 'adultpop'),
-        
-#~         conditionalPanel('input.color == "superzip" || input.size == "superzip"',
-#~           # Only prompt for threshold when coloring or sizing by superzip
-#~           numericInput('threshold', 'SuperZIP threshold (top n percentile)', 5)
-#~         ),
-
-#~         plotOutput('histCentile', height = 200),
-#~         plotOutput('scatterCollegeIncome', height = 250)
-      )#,
-
-#~       tags$div(id='cite',
-#~         'Data compiled for ', tags$em('Coming Apart: The State of White America, 1960–2010'), ' by Charles Murray (Crown Forum, 2012).'
-#~       )
     )
   ),
   
   tabPanel('Two-state comparison', style = 'height:calc(100vh - 51px); margin-top: -20px;', # 100vh is full, minus 50+1border nav, minus 20 nav margin
     
-#~     div(class = 'outer',
       tags$head(
         includeCSS('style.css'),
         includeScript('gomap.js')
@@ -149,31 +125,21 @@ navbarPage('Raw Power', id='nav',
         switchInput('m2New', 'Highlight new', value = FALSE),
         actionButton('m2Reset', 'Reset Map')
       )
-#~     )
   ),
 
   tabPanel('Data explorer (2000)',
     fluidRow(
       column(3,
-        #selectInput('states', 'States', c('All states'='', structure(state.abb, names=state.name), 'Washington, DC'='DC'), multiple=TRUE)
       ),
       column(3,
-        #conditionalPanel('input.states',
-        #  selectInput('cities', 'Cities', c('All cities'=''), multiple=TRUE)
-        #)
       ),
       column(3,
-        #conditionalPanel('input.states',
-        #  selectInput('zipcodes', 'Zipcodes', c('All zipcodes'=''), multiple=TRUE)
-        #)
       )
     ),
     fluidRow(
       column(1,
-        #numericInput('minScore', 'Min score', min=0, max=100, value=0)
       ),
       column(1,
-        #numericInput('maxScore', 'Max score', min=0, max=100, value=100)
       )
     ),
     hr(),
@@ -187,14 +153,10 @@ navbarPage('Raw Power', id='nav',
   ),
   
   tabPanel('About',
-    #wellPanel(
       tags$div(
         HTML('Initial template used: (https://shiny.rstudio.com/gallery/superzip-example.html).<br>Author: David Shumway<br>Original data: (https://www.epa.gov/egrid/download-data).')
       )
-    #),
   )
-      
-#~   conditionalPanel('false', icon('crosshair'))
 )
 
 

@@ -3,23 +3,17 @@
 
 library(shiny)
 library(DT)
-#~ library(data.table) # for calculating percentages
-#~ library(ggplot2)
-#~ library(usmap)
-#~ library(stringr)
-
 library(leaflet)
 library(RColorBrewer)
 library(scales)
 library(lattice)
-#~ library(dplyr)
 
 energyListRen <- list(
   'Geothermal' = 'Geothermal',
   'Hydro' = 'Hydro',
   'Solar' = 'Solar',
   'Wind' = 'Wind',
-  'Biomass' = 'Biomass' # ren?
+  'Biomass' = 'Biomass'
 )
 energyListNonRen <- list(
   'Coal' = 'Coal',
