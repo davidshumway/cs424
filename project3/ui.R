@@ -35,37 +35,39 @@ navbarPage('We\'ve Got the Power', id='nav',
 
         h4('Map explorer'),
         
-#~         actionButton('illAll', 'Electric'),
-#~         actionButton('illRen', 'Renewables'),
-#~         actionButton('illNonRen', 'Non-Renewables'),
-        
-        selectInput('viewType', 'View Type:', c(
-            'Gas Use' = 'gas',
-            'Electricity Use' = 'electric',
-            'Building Age' = 'age',
-            'Building Type' = 'type',
-            'Building Height' = 'height',
-            'Total Population' = 'population'
-          ), selected = 'electric'
-          #, multiple = FALSE, size = 6, selectize = FALSE
+        fluidRow(
+          column(6, 
+            selectInput('viewType', 'View Type:', c(
+                'Gas Use' = 'gas',
+                'Electricity Use' = 'electric',
+                'Building Age' = 'age',
+                'Building Type' = 'type',
+                'Building Height' = 'height',
+                'Total Population' = 'population'
+              ), selected = 'electric'
+              #, multiple = FALSE, size = 6, selectize = FALSE
+            )
+          ),
+          column(6,
+            selectInput('month', 'Month:', c(
+                'Full Year' = 'all',
+                'January' = '.JANUARY.2010',
+                'February' = '.FEBRUARY.2010',
+                'March' = '.MARCH.2010',
+                'April' = '.APRIL.2010',
+                'May' = '.MAY.2010',
+                'June' = '.JUNE.2010',
+                'July' = '.JULY.2010',
+                'August' = '.AUGUST.2010',
+                'September' = '.SEPTEMBER.2010',
+                'October' = '.OCTOBER.2010',
+                'November' = '.NOVEMBER.2010',
+                'December' = '.DECEMBER.2010'
+              ), selected = 'all'
+            )
+          )
         ),
         
-        selectInput('month', 'Month:', c(
-            'Full Year' = 'all',
-            'January' = '.JANUARY.2010',
-            'February' = '.FEBRUARY.2010',
-            'March' = '.MARCH.2010',
-            'April' = '.APRIL.2010',
-            'May' = '.MAY.2010',
-            'June' = '.JUNE.2010',
-            'July' = '.JULY.2010',
-            'August' = '.AUGUST.2010',
-            'September' = '.SEPTEMBER.2010',
-            'October' = '.OCTOBER.2010',
-            'November' = '.NOVEMBER.2010',
-            'December' = '.DECEMBER.2010'
-          ), selected = 'all'
-        ),
         
         checkboxGroupButtons(inputId = 'building', label = 'Building Type:',
           choices = c(
@@ -92,10 +94,17 @@ navbarPage('We\'ve Got the Power', id='nav',
 #~           choices = energyList, selected = unlist(energyList)
 #~         ),
         
-        h5('Electricity per month'),
-        plotOutput('bar1', height = 120),
-        h5('Gas per month'),
-        plotOutput('bar2', height = 120),
+        fluidRow(
+          column(6, 
+            h5('Electricity per month'),
+            plotOutput('bar1', height = 120)
+          ),
+          column(6, 
+            h5('Gas per month'),
+            plotOutput('bar2', height = 120)
+          )
+        ),
+        
         h5('Raw data'),
         DT::dataTableOutput('data1tbl'),
         DT::dataTableOutput('data2tbl'),
@@ -133,34 +142,42 @@ navbarPage('We\'ve Got the Power', id='nav',
 
         h4('Map explorer'),
         
-        selectInput('viewType', 'View Type:', c(
-            'Gas Use' = 'gas',
-            'Electricity Use' = 'electric',
-            'Building Age' = 'age',
-            'Building Type' = 'type',
-            'Building Height' = 'height',
-            'Total Population' = 'population'
-          ), selected = 'electric'
+        selectInput('community2', 'Community:', communities),
+        
+        fluidRow(
+          column(6, 
+            selectInput('viewType2', 'View Type:', c(
+                'Gas Use' = 'gas',
+                'Electricity Use' = 'electric',
+                'Building Age' = 'age',
+                'Building Type' = 'type',
+                'Building Height' = 'height',
+                'Total Population' = 'population'
+              ), selected = 'electric'
+              #, multiple = FALSE, size = 6, selectize = FALSE
+            )
+          ),
+          column(6,
+            selectInput('month2', 'Month:', c(
+                'Full Year' = 'all',
+                'January' = '.JANUARY.2010',
+                'February' = '.FEBRUARY.2010',
+                'March' = '.MARCH.2010',
+                'April' = '.APRIL.2010',
+                'May' = '.MAY.2010',
+                'June' = '.JUNE.2010',
+                'July' = '.JULY.2010',
+                'August' = '.AUGUST.2010',
+                'September' = '.SEPTEMBER.2010',
+                'October' = '.OCTOBER.2010',
+                'November' = '.NOVEMBER.2010',
+                'December' = '.DECEMBER.2010'
+              ), selected = 'all'
+            )
+          )
         ),
         
-        selectInput('month', 'Month:', c(
-            'Full Year' = 'all',
-            'January' = '.JANUARY.2010',
-            'February' = '.FEBRUARY.2010',
-            'March' = '.MARCH.2010',
-            'April' = '.APRIL.2010',
-            'May' = '.MAY.2010',
-            'June' = '.JUNE.2010',
-            'July' = '.JULY.2010',
-            'August' = '.AUGUST.2010',
-            'September' = '.SEPTEMBER.2010',
-            'October' = '.OCTOBER.2010',
-            'November' = '.NOVEMBER.2010',
-            'December' = '.DECEMBER.2010'
-          ), selected = 'all'
-        ),
-        
-        checkboxGroupButtons(inputId = 'building', label = 'Building Type:',
+        checkboxGroupButtons(inputId = 'building2', label = 'Building Type:',
           choices = c(
             'Residential' = 'Residential',
             'Commercial' = 'Commercial',
@@ -168,14 +185,20 @@ navbarPage('We\'ve Got the Power', id='nav',
           ), selected = c('Residential', 'Commercial', 'Industrial')#, 'mix')
         ),
         
-        h5('Electricity per month'),
-        plotOutput('bar10', height = 120),
-        h5('Gas per month'),
-        plotOutput('bar20', height = 120),
-        h5('Raw data'),
-        DT::dataTableOutput('data10tbl'),
-        DT::dataTableOutput('data20tbl'),
-        actionButton('nwsReset', 'Reset Map'),
+        fluidRow(
+          column(6, 
+            h5('Electricity per month'),
+            plotOutput('bar21', height = 120)
+          ),
+          column(6, 
+            h5('Gas per month'),
+            plotOutput('bar22', height = 120)
+          )
+        ),
+        
+        DT::dataTableOutput('data21tbl'),
+        DT::dataTableOutput('data22tbl'),
+        actionButton('nwsReset2', 'Reset Map'),
       ),
       # right
       absolutePanel(id = 'controls', class = 'panel panel-default', fixed = TRUE,
@@ -184,34 +207,42 @@ navbarPage('We\'ve Got the Power', id='nav',
 
         h4('Map explorer'),
         
-        selectInput('viewType', 'View Type:', c(
-            'Gas Use' = 'gas',
-            'Electricity Use' = 'electric',
-            'Building Age' = 'age',
-            'Building Type' = 'type',
-            'Building Height' = 'height',
-            'Total Population' = 'population'
-          ), selected = 'electric'
+        selectInput('community3', 'Community:', communities),
+        
+        fluidRow(
+          column(6, 
+            selectInput('viewType3', 'View Type:', c(
+                'Gas Use' = 'gas',
+                'Electricity Use' = 'electric',
+                'Building Age' = 'age',
+                'Building Type' = 'type',
+                'Building Height' = 'height',
+                'Total Population' = 'population'
+              ), selected = 'electric'
+              #, multiple = FALSE, size = 6, selectize = FALSE
+            )
+          ),
+          column(6,
+            selectInput('month3', 'Month:', c(
+                'Full Year' = 'all',
+                'January' = '.JANUARY.2010',
+                'February' = '.FEBRUARY.2010',
+                'March' = '.MARCH.2010',
+                'April' = '.APRIL.2010',
+                'May' = '.MAY.2010',
+                'June' = '.JUNE.2010',
+                'July' = '.JULY.2010',
+                'August' = '.AUGUST.2010',
+                'September' = '.SEPTEMBER.2010',
+                'October' = '.OCTOBER.2010',
+                'November' = '.NOVEMBER.2010',
+                'December' = '.DECEMBER.2010'
+              ), selected = 'all'
+            )
+          )
         ),
         
-        selectInput('month', 'Month:', c(
-            'Full Year' = 'all',
-            'January' = '.JANUARY.2010',
-            'February' = '.FEBRUARY.2010',
-            'March' = '.MARCH.2010',
-            'April' = '.APRIL.2010',
-            'May' = '.MAY.2010',
-            'June' = '.JUNE.2010',
-            'July' = '.JULY.2010',
-            'August' = '.AUGUST.2010',
-            'September' = '.SEPTEMBER.2010',
-            'October' = '.OCTOBER.2010',
-            'November' = '.NOVEMBER.2010',
-            'December' = '.DECEMBER.2010'
-          ), selected = 'all'
-        ),
-        
-        checkboxGroupButtons(inputId = 'building', label = 'Building Type:',
+        checkboxGroupButtons(inputId = 'building3', label = 'Building Type:',
           choices = c(
             'Residential' = 'Residential',
             'Commercial' = 'Commercial',
@@ -219,14 +250,20 @@ navbarPage('We\'ve Got the Power', id='nav',
           ), selected = c('Residential', 'Commercial', 'Industrial')#, 'mix')
         ),
         
-        h5('Electricity per month'),
-        plotOutput('bar30', height = 120),
-        h5('Gas per month'),
-        plotOutput('bar40', height = 120),
-        h5('Raw data'),
-        DT::dataTableOutput('data30tbl'),
-        DT::dataTableOutput('data40tbl'),
-        actionButton('nwsReset', 'Reset Map'),
+        fluidRow(
+          column(6, 
+            h5('Electricity per month'),
+            plotOutput('bar31', height = 120)
+          ),
+          column(6, 
+            h5('Gas per month'),
+            plotOutput('bar32', height = 120)
+          )
+        ),
+        
+        DT::dataTableOutput('data31tbl'),
+        DT::dataTableOutput('data32tbl'),
+        actionButton('nwsReset3', 'Reset Map'),
       )
     )
   ),
