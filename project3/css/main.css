@@ -1,0 +1,5 @@
+body {background-color: #eee;}
+
+#controls { /*smaller*/
+  zoom: 0.75;
+}

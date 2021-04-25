@@ -20,7 +20,7 @@ navbarPage('We\'ve Got the Power', id='nav',
     div(class = 'outer',
 
       tags$head(
-        #includeCSS('style.css'),
+        includeCSS('css/main.css')
         #includeScript('gomap.js')
       ),
 
@@ -142,19 +142,44 @@ navbarPage('We\'ve Got the Power', id='nav',
 
         h4('Map explorer'),
         
-        selectInput('community2', 'Community:', communities, selected = 'Near West Side'),
+        selectInput('bt2', 'Map type:',
+          c('Blocks' = 'blocks','Tracts' = 'tracts'),
+          selected = 'blocks'),
+          
+        fluidRow(
+          column(6, 
+            selectInput('community2', 'Community:', communities, selected = 'Near West Side')
+          ),
+          column(6, 
+            selectInput('color2', 'Color:', c(1,2,3), selected = 1)
+          )
+        ),
         
         fluidRow(
           column(6, 
-            selectInput('viewType2', 'View Type:', c(
-                'Gas Use' = 'gas',
-                'Electricity Use' = 'electric',
-                'Building Age' = 'age',
-                'Building Type' = 'type',
-                'Building Height' = 'height',
-                'Total Population' = 'population'
+            selectInput('viewType2', 'View Type:', 
+              list(
+                'Blocks / Tracts' = c(
+                  'Gas Use' = 'gas',
+                  'Electricity Use' = 'electric',
+                  'Building Age' = 'age',
+                  'Building Type' = 'type',
+                  'Building Height' = 'height',
+                  'Total Population' = 'population'
+                ),
+                'Tract-view only' = c(
+                  '10% oldest' = '10oldest',
+                  '10% newest' = '10newest',
+                  '10% tallest' = '10tallest',
+                  '10% shortest' = '10shortest',
+                  '10% most electric' = '10electric',
+                  '10% most gas' = '10gas',
+                  '10% high. population' = '10population',
+                  '10% low. population' = '10poplowest',
+                  '10% most occupied' = '10occupied',
+                  '10% highest rental %' = '10renters'
+                )
               ), selected = 'electric'
-              #, multiple = FALSE, size = 6, selectize = FALSE
             )
           ),
           column(6,
@@ -198,7 +223,8 @@ navbarPage('We\'ve Got the Power', id='nav',
         
         DT::dataTableOutput('data21tbl'),
         DT::dataTableOutput('data22tbl'),
-        actionButton('nwsReset2', 'Reset Map'),
+        
+        actionButton('reset2', 'Reset Map'),
       ),
       # right
       absolutePanel(id = 'controls', class = 'panel panel-default', fixed = TRUE,
@@ -207,19 +233,44 @@ navbarPage('We\'ve Got the Power', id='nav',
 
         h4('Map explorer'),
         
-        selectInput('community3', 'Community:', communities, selected = 'Loop'),
+        selectInput('bt3', 'Map type:',
+          c('Blocks' = 'blocks','Tracts' = 'tracts'),
+          selected = 'blocks'),
+          
+        fluidRow(
+          column(6, 
+            selectInput('community3', 'Community:', communities, selected = 'Loop')
+          ),
+          column(6, 
+            selectInput('color3', 'Color:', c(1,2,3), selected = 1)
+          )
+        ),
         
         fluidRow(
           column(6, 
-            selectInput('viewType3', 'View Type:', c(
-                'Gas Use' = 'gas',
-                'Electricity Use' = 'electric',
-                'Building Age' = 'age',
-                'Building Type' = 'type',
-                'Building Height' = 'height',
-                'Total Population' = 'population'
+            selectInput('viewType3', 'View Type:', 
+              list(
+                'Blocks / Tracts' = c(
+                  'Gas Use' = 'gas',
+                  'Electricity Use' = 'electric',
+                  'Building Age' = 'age',
+                  'Building Type' = 'type',
+                  'Building Height' = 'height',
+                  'Total Population' = 'population'
+                ),
+                'Tract-view only' = c(
+                  '10% oldest' = '10oldest',
+                  '10% newest' = '10newest',
+                  '10% tallest' = '10tallest',
+                  '10% shortest' = '10shortest',
+                  '10% most electric' = '10electric',
+                  '10% most gas' = '10gas',
+                  '10% high. population' = '10population',
+                  '10% low. population' = '10poplowest',
+                  '10% most occupied' = '10occupied',
+                  '10% highest rental %' = '10renters'
+                )
               ), selected = 'electric'
-              #, multiple = FALSE, size = 6, selectize = FALSE
             )
           ),
           column(6,
@@ -263,7 +314,8 @@ navbarPage('We\'ve Got the Power', id='nav',
         
         DT::dataTableOutput('data31tbl'),
         DT::dataTableOutput('data32tbl'),
-        actionButton('nwsReset3', 'Reset Map'),
+        
+        actionButton('reset3', 'Reset Map'),
       )
     )
   ),
