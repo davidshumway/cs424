@@ -12,8 +12,8 @@ library(leaflet)
 library(tidyr)
 options(tigris_use_cache = TRUE)
 
-#~ data1 <- read.csv('data/Energy_Usage_2010.csv')
-data1 <- read.csv('data/test.csv')
+data1 <- read.csv('data/Energy_Usage_2010.csv')
+#~ data1 <- read.csv('data/test.csv')
 
 # always room for broken data
 names(data1)[names(data1) == 'TERM.APRIL.2010'] <- 'THERM.APRIL.2010'
@@ -124,8 +124,8 @@ filters2 <- function(input, output, side) {
     selectedData <- subset(selectedData, BUILDING.TYPE %in% input[[paste0('building', s)]])
   }
   
-#~   print(paste0('nrow(selectedData):', nrow(selectedData)))
-  if (nrow(selectedData) == 0) { #???????
+  # No data
+  if (nrow(selectedData) == 0) {
     print('it is zerooooooooooo')
     m <- mapview()
     render('mapplot', renderLeaflet({

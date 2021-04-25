@@ -142,7 +142,7 @@ navbarPage('We\'ve Got the Power', id='nav',
 
         h4('Map explorer'),
         
-        selectInput('community2', 'Community:', communities),
+        selectInput('community2', 'Community:', communities, selected = 'Near West Side'),
         
         fluidRow(
           column(6, 
@@ -207,7 +207,7 @@ navbarPage('We\'ve Got the Power', id='nav',
 
         h4('Map explorer'),
         
-        selectInput('community3', 'Community:', communities),
+        selectInput('community3', 'Community:', communities, selected = 'Loop'),
         
         fluidRow(
           column(6, 
