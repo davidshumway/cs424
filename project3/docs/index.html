@@ -15,7 +15,6 @@
   <a href="../../index.html">Home</a>
 </p>
 <p>
-  Project 2:
   Introduction |
   <a href="./data.html">Data</a> |
   <a href="./notes.html">Interesting notes on the data</a>
@@ -24,8 +23,8 @@
 <h4>Project 3 - "We've Got the Power"</h4>
 
 <h5>A web-based application using R, Shiny, and Shiny Dashboard to
-  visualize electrical power generation in the US for the years 2000,
-  2010, and 2018.</h5>
+  visualize energy usage and Census data in Chicago, Illinois in the
+  year 2010</h5>
 
 <h4>Introduction</h4>
 
@@ -59,7 +58,7 @@ Project 3 - "We've Got the Power" visualizes power use in 77 community areas in 
 
 <p style="text-align:center; border: 1px solid #eee;">
   <img src="./f1.png" style="width:80%;" /><br>
-  Figure 3: Visualizing buidling height in the Near North Side neighborhood by Census block (left map) while simultaneously browsing the top 10% tallest buildings in the dataset grouped by Census tract (right map).
+  Figure 3: Visualizing building height in the Near North Side neighborhood by Census block (left map) while simultaneously browsing the top 10% tallest buildings in the dataset grouped by Census tract (right map).
 </p>
 
 <h4>Things you can do with the application</h4>
@@ -69,7 +68,7 @@ Project 3 - "We've Got the Power" visualizes power use in 77 community areas in 
 </p>
 
 <p>
-  When viewing by block or tract, data visualization can be seen for Gas Use, Electricity Use, Building Age, Building Type, Building Height, Total Population, Resident Age, and Migrant Worker Housing Units. If viewing by block, only data for an individual neighborhood's blocks are shown. If viewing by tract, all tracts in Cook County are shown.
+  When viewing by block or tract, data visualization can be seen for Gas Use, Electricity Use, Building Age, Building Type, Building Height, Total Population, Resident Age, and Migrant Worker Housing Units. If viewing by block, only data for an individual neighborhood's blocks are shown. If viewing by tract, all tracts in Cook County are shown. An autocomplete communities drop-down menu allows users to quickly search and browse community names in the dataset.
 </p>
 
 <p>
@@ -114,6 +113,14 @@ Project 3 - "We've Got the Power" visualizes power use in 77 community areas in 
 <h4>Future work</h4>
 <p>Grey out map controls when they are not in use or not usable.</p>
 <p>Building type data should be shown using a quantitative color scheme rather than sequential color scheme.</p>
+<p>Gain a better understanding of certain facets of the data. For example, certain Census blocks are left completely empty of any type of data. Is the corresponding Census data for these blocks also empty? Another example is regarding certain "stray" census blocks which are tied to distant neighborhoods (Figure 6). Why are these blocks included in distant neighborhoods? Is it on purpose or by accident?</p>
+
+<p style="text-align:center; border: 1px solid #eee;">
+  <img src="./f11.png" style="width:80%;" /><br>
+  Figure 6: Stray blocks: Comparing resident age in two Census blocks. The Census blocks are mysteriously added to separate neighborhoods in the original dataset. On the left, the Near West Side community has been selected but two stray blocks are included which are far to the north in the West Town community. On the right, the West Town community has been selected showing that indeed the Census blocks are part of that community.
+</p>
+
+<p>Tie in a building dataset to help explain the data. The average age of residents on the UIC campus (Census block 170318419001021) is listed as 19.5 in 2010 Census data, while a few blocks away, the average age of residents for a Census block near the West Roosevelt Rd. / South Ashland Ave. intersection (Census block 170318429002002) is shown as 86. As UIC is familiar to us, it makes sense the campus has a low resident age because mostly students are living there. But what buildings are present at block 170318429002002? Tying in building data sets, such as commercially available data including the Yelp and Google Maps APIs, would help to explain these differences.</p>
 
 <h4>References</h4>
 <p>
