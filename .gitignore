@@ -2,4 +2,7 @@ venv
 ./venv
 venv/
 .Rhistory
-
+.RData
+.~lock*
+.ipynb_checkpoints
+.ipynb_checkpoints/
