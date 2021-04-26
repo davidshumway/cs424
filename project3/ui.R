@@ -143,7 +143,8 @@ navbarPage('We\'ve Got the Power', id='nav',
         h4('Map explorer'),
         
         selectInput('bt2', 'Map type:',
-          c('Blocks' = 'blocks','Tracts' = 'tracts'),
+          c('Blocks' = 'blocks', 'Tracts' = 'tracts', 'Age' = 'age',
+            'Migrant Workers' = 'migrant'),
           selected = 'blocks'),
           
         fluidRow(
@@ -165,7 +166,9 @@ navbarPage('We\'ve Got the Power', id='nav',
                   'Building Age' = 'age',
                   'Building Type' = 'type',
                   'Building Height' = 'height',
-                  'Total Population' = 'population'
+                  'Total Population' = 'population',
+                  'Resident Age' = 'resAge',
+                  'Migrant Housing' = 'migrant'
                 ),
                 'Tract-view only' = c(
                   '10% oldest' = '10oldest',
@@ -174,10 +177,13 @@ navbarPage('We\'ve Got the Power', id='nav',
                   '10% shortest' = '10shortest',
                   '10% most electric' = '10electric',
                   '10% most gas' = '10gas',
-                  '10% high. population' = '10population',
-                  '10% low. population' = '10poplowest',
+                  '10% high. pop.' = '10population',
+                  '10% low. pop.' = '10poplowest',
                   '10% most occupied' = '10occupied',
-                  '10% highest rental %' = '10renters'
+                  '10% highest rental %' = '10renters',
+                  '10% young. residents' = '10age',
+                  '10% oldest residents' = '10ageoldest',
+                  'Migrant wkr. housing' = '10worker'
                 )
               ), selected = 'electric'
             )
@@ -234,7 +240,7 @@ navbarPage('We\'ve Got the Power', id='nav',
         h4('Map explorer'),
         
         selectInput('bt3', 'Map type:',
-          c('Blocks' = 'blocks','Tracts' = 'tracts'),
+          c('Blocks' = 'blocks', 'Tracts' = 'tracts'), #, 'Age' = 'age', 'Migrant Workers' = 'migrant'
           selected = 'blocks'),
           
         fluidRow(
@@ -256,7 +262,9 @@ navbarPage('We\'ve Got the Power', id='nav',
                   'Building Age' = 'age',
                   'Building Type' = 'type',
                   'Building Height' = 'height',
-                  'Total Population' = 'population'
+                  'Total Population' = 'population',
+                  'Resident Age' = 'resAge',
+                  'Migrant Housing' = 'migrant'
                 ),
                 'Tract-view only' = c(
                   '10% oldest' = '10oldest',
@@ -265,10 +273,13 @@ navbarPage('We\'ve Got the Power', id='nav',
                   '10% shortest' = '10shortest',
                   '10% most electric' = '10electric',
                   '10% most gas' = '10gas',
-                  '10% high. population' = '10population',
-                  '10% low. population' = '10poplowest',
+                  '10% high. pop.' = '10population',
+                  '10% low. pop.' = '10poplowest',
                   '10% most occupied' = '10occupied',
-                  '10% highest rental %' = '10renters'
+                  '10% highest rental %' = '10renters',
+                  '10% young. residents' = '10age',
+                  '10% oldest residents' = '10ageoldest',
+                  'Migrant wkr. housing' = '10worker'
                 )
               ), selected = 'electric'
             )
