@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <title>Project 2: Introduction</title>
+</head>
+<body>
+  <div class="container">
+<h2>CS 424 Spring 2021</h2>
+<h2>David Shumway</h2>
+<p>
+  <a href="../../index.html">Home</a>
+</p>
+<p>
+  Project 2:
+  Introduction |
+  <a href="./data.html">Data</a> |
+  <a href="./notes.html">Interesting notes on the data</a>
+</p>
+
+<h4>Project 3 - "We've Got the Power"</h4>
+
+<h5>A web-based application using R, Shiny, and Shiny Dashboard to
+  visualize electrical power generation in the US for the years 2000,
+  2010, and 2018.</h5>
+
+<h4>Introduction</h4>
+
+<p>
+  Link to the visualization:
+  <a href="https://parrot.shinyapps.io/project3/">https://parrot.shinyapps.io/project3/</a>.
+  <br>
+  Data source: https://www.kaggle.com/chicago/chicago-energy-usage-2010
+  <br>
+  Author: David Shumway
+</p>
+
+<p style="text-align:center; border: 1px solid #eee;">
+  <img src="./p3.Shumway.David.png" style="width:80%;" /><br>
+  Figure 1: "We've Got the Power": Introductory visualization highlighting building age in the Near West Side community area.
+</p>
+  
+<h6>Overview:</h6>
+<p>
+Project 3 - "We've Got the Power" visualizes power use in 77 community areas in Chicago, Illinois (Figure 2) in the year 2010 using R with a web interface built using the Shiny library. The spatially-based dataset is sourced from the City of Chicago and contains a mixture of Chicago and US Census data points. The dataset is primarily split into Census blocks, the smallest spatial container in the US Census, and can thus be further grouped by other larger Census arrangements, such as Census tract. Data points include Gas Use, Electricity Use, Building Age, Building Type, Building Height, and Total Population. In addition to the original dataset, as a proof of concept two additional Census data points are retrieved from the US Census dataset and included in the visualization: Resident age, and migrant worker housing units.</p>
+
+<p style="text-align:center; border: 1px solid #eee;">
+  <img src="./Chicago_community_areas_map.png" style="width:60%;" /><br>
+  Figure 2: Map of Chicago neighborhoods [1].
+</p>
+
+<h4>How to use the application</h4>
+<p>
+  The application is split into three tabs: an introductory tab visualizing one neighborhood in the dataset (Near West Side tab), a side-by-side view with the ability to visualize either neighborhood or Census tracts (Comparison tab), and an about tab. Each map in the visualization includes a Map Explorer control panel to aid in data navigation as well charts and tables to highlight and further inspect electricity and gas usage of selected data.
+</p> 
+
+<p style="text-align:center; border: 1px solid #eee;">
+  <img src="./f1.png" style="width:80%;" /><br>
+  Figure 3: Visualizing buidling height in the Near North Side neighborhood by Census block (left map) while simultaneously browsing the top 10% tallest buildings in the dataset grouped by Census tract (right map).
+</p>
+
+<h4>Things you can do with the application</h4>
+
+<p><i>Map type: Block versus Tract.</i>
+  Data can be visualized for each of Chicago's 77 neighborhoods by either block or tract groupings.
+</p>
+
+<p>
+  When viewing by block or tract, data visualization can be seen for Gas Use, Electricity Use, Building Age, Building Type, Building Height, Total Population, Resident Age, and Migrant Worker Housing Units. If viewing by block, only data for an individual neighborhood's blocks are shown. If viewing by tract, all tracts in Cook County are shown.
+</p>
+
+<p>
+  Additional views are available for when viewing by Census tract to visualize the top 10 percentage of tracts in the dataset (i.e. in Cook County, Illinois). Top 10 percentage views include: Oldest; Newest; Tallest; Shortest; Most electric use; Most gas use; Highest population; Lowest population; Most occupied; Highest percentage of units rented; Youngest residents; Oldest residents; Most units dedicated to housing migrant workers.
+</p>
+
+<p style="text-align:center; border: 1px solid #eee;">
+  <img src="./f2.png" style="width:80%;" /><br>
+  Figure 4: Visualizing electricity use in all Cook County tracts in the full year (left map) while simultaneously browsing the top 10% of tracts based on electricity usage in the month of July (right map).
+</p>
+
+<p><i>Map coloring.</i>
+  Three different color schemes may be used to color the data: Pink, blue, and orange. Colors were chosen using the online colorbrewer2.org coloring tool [2].
+</p>
+
+<p><i>Month.</i>
+  The original dataset includes monthly usage for gas and electricity by census block. Whether viewing by block or by tract, when viewing electricity or gas use, the data can be further filtered to view usage for a single month.
+</p>
+
+<p><i>Building type.</i>
+  Building types in the dataset include Residential, Commercial, and Industrial. Building type can be selected when viewing the data in both tract or block viewing mode. Views including the building type filter include electricity use (electricity use, top 10% electricity) and gas use (gas use, top 10% gas use). In addition, building type itself can be viewed in either tract or block viewing mode, and will thus visualize the types of building present in the given tract or block, respectively (Figure 5). In cases where multiple building types are included in a tract or block, the area is marked as "Mixed".
+</p>
+
+<p style="text-align:center; border: 1px solid #eee;">
+  <img src="./f3.png" style="width:80%;" /><br>
+  Figure 4: Visualizing gas and electricity for residential areas. In the left map, the top 10% residential July electricity use Cook County tracts are shown, while in the right map the top 10% residential December gas use Cook County tracts are displayed.
+</p>
+
+<p style="text-align:center; border: 1px solid #eee;">
+  <img src="./f4.png" style="width:80%;" /><br>
+  Figure 5: Visualizing building types in Cook County tracts (left map) and Near West Side blocks (right map).
+</p>
+
+<p><i>Basemap layers.</i>
+  Basemaps for the visualization include CartoDB.Positron (default), CartoDB.DarkMatter, OpenStreetMap, Esri.WorldImagery, and OpenTopoMap.
+</p>
+
+<p><i>Reset map.</i>
+  Each map includes a Reset Map to reset the map to its original view.
+</p>
+
+<h4>Future work</h4>
+<p>Grey out map controls when they are not in use or not usable.</p>
+<p>Building type data should be shown using a quantitative color scheme rather than sequential color scheme.</p>
+
+<h4>References</h4>
+<p>
+  [1] https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Chicago_community_areas_map.svg/739px-Chicago_community_areas_map.svg.png
+  <br>
+  [2] https://colorbrewer2.org
+</p>
+
+</div>
+</body>
+</html>

@@ -73,9 +73,8 @@ navbarPage('We\'ve Got the Power', id='nav',
           choices = c(
             'Residential' = 'Residential',
             'Commercial' = 'Commercial',
-            'Industrial' = 'Industrial'#,
-            #'Mixed Use' = 'mix'
-          ), selected = c('Residential', 'Commercial', 'Industrial')#, 'mix')
+            'Industrial' = 'Industrial'
+          ), selected = c('Residential', 'Commercial', 'Industrial')
         ),
         
         # This does not work well.
@@ -143,8 +142,7 @@ navbarPage('We\'ve Got the Power', id='nav',
         h4('Map explorer'),
         
         selectInput('bt2', 'Map type:',
-          c('Blocks' = 'blocks', 'Tracts' = 'tracts', 'Age' = 'age',
-            'Migrant Workers' = 'migrant'),
+          c('Blocks' = 'blocks', 'Tracts' = 'tracts'),
           selected = 'blocks'),
           
         fluidRow(

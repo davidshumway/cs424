@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <title>Data</title>
+</head>
+<body>
+  <div class="container">
+<h2>CS 424 Spring 2021</h2>
+<h2>David Shumway</h2>
+<p>
+  <a href="../../index.html">Home</a>
+</p>
+<p>
+  Menu:
+  <a href="./index.html">Introduction</a> |
+  Data |
+  <a href="./notes.html">Interesting notes on the data</a>
+</p>
+
+<p>
+  Data source: https://www.kaggle.com/chicago/chicago-energy-usage-2010
+</p>
+
+<p>The spatially-based dataset is sourced from the City of Chicago and contains a mixture of Chicago and US Census data points. The dataset is primarily split into Census blocks, the smallest spatial container in the US Census, and can thus be further grouped by other larger Census arrangements, such as Census tract. Data points include Gas Use, Electricity Use, Building Age, Building Type, Building Height, and Total Population. In addition to the original dataset, as a proof of concept two additional Census data points are retrieved from the US Census dataset and included in the visualization: Resident age, and migrant worker housing units.</p>
+
+<h4>Data types in the original dataset</h4>
+<p>
+  Building type: qualitative (Residential, Commercial, Industrial)<br>
+    &nbsp;&nbsp; No NA values.<br>
+  KWH (month) 2010: sequential<br>
+  THERMS (month) 2010: sequential<br>
+  TOTAL KWH: sequential<br>
+  TOTAL THERMS: sequential<br>
+  Total population: sequential<br>
+    &nbsp;&nbsp; In blocks with multiple rows, each row contains the same population value.
+  Average stories: sequential (0-110)<br>
+    &nbsp;&nbsp; In blocks with multiple rows, each row contains a different average stories value, and thus the rows are averaged to ascertain the average stories value for a given block.<br>
+  Average building age: sequential (0-158)<br>
+    &nbsp;&nbsp; In blocks with multiple rows, each row contains a different average building age value, and thus the rows are averaged to ascertain the average building age for a given block.<br>
+  Occupied units percentage: sequential (0-1)<br>
+    &nbsp;&nbsp; In blocks with multiple rows, each row contains the same value.
+  Renter-occupied housing percentage: sequential (0-1)<br>
+    &nbsp;&nbsp; In blocks with multiple rows, each row contains the same value.
+</p>
+
+<h4>Data types added from the 2010 US Census</h4>
+<p>
+  In all cases, data was retrieved at the block-level 
+  Resident age: sequential<br>
+  Migrount housing units: sequential
+</p>
+
+<h4>Data issues</h4>
+<p>
+  The THERM.APRIL.2010 column in the original dataset is titled "TERM.APRIL.2010" (sic).
+</p>
+
+<p>
+  The data for building types appears to be rough-cut. For example, in the downtown loop area, little or few Census blocks are marked as residential. This is in spite of a number of corresponding downtown loop rows in the dataset marked as commercial which include residential data. Similarly, there are very few rows in the dataset containing Industrial building data.
+</p>
+
+<p>
+  Population data appears to be quite sparse throughout the dataset. According to Wikipedia, the population of Chicago alone in 2010 was 2.6 million, while in the dataset the total population (based on totals shown in summary neighborhood rows) is only 1.4 million.
+</p>
+
+</div>
+</body>
+</html>
