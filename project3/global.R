@@ -445,7 +445,7 @@ filters2 <- function(input, output, side) {
       selectedData$TOTAL.POPULATION, by=list(GEOID10=selectedData$GEOID10), FUN=mean)
     t[t == 0] <- NA
     nwsTotalPop <- merge(selectedData, t, by = 'GEOID10')
-    m <- mapview(nwsTotalPop, zcol = 'x', layer.name = s)
+    m <- mapview(nwsTotalPop, zcol = 'TOTAL.POPULATION', layer.name = s) #??? if x then wrong #
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
