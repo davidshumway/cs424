@@ -73,24 +73,26 @@ dataAge$GEOID10 <- paste0(
   dataAge$county,
   dataAge$tract,
   dataAge$block)
-dataAge$GEOIDtmp <- paste0(
-  dataAge$state, '0',
-  dataAge$county,
-  dataAge$tract)
 dataMigrant$GEOID10 <- paste0(
   dataMigrant$state, '0',
   dataMigrant$county,
   dataMigrant$tract,
   dataMigrant$block)
+
+# generate tract data: aggregate, remove dups, rename, round
+# warning for mean: contains 0s
+dataAge$GEOIDtmp <- paste0(
+  dataAge$state, '0',
+  dataAge$county,
+  dataAge$tract)
 dataMigrant$GEOIDtmp <- paste0(
   dataMigrant$state, '0',
   dataMigrant$county,
   dataMigrant$tract)
-
-
-# tract for age/migrant, aggregate, remove dups, rename, round
-dataAgeTract <- aggregate(dataAge$P013001,
-  by=list(GEOIDtmp=dataAge$GEOIDtmp), FUN=mean)
+y <- dataAge
+y <- y[!(y$P013001 == 0),]
+dataAgeTract <- aggregate(y$P013001,
+  by=list(GEOIDtmp=y$GEOIDtmp), FUN=mean)
 dataMigrantTract <- aggregate(dataMigrant$H005007,
   by=list(GEOIDtmp=dataMigrant$GEOIDtmp), FUN=sum)
 
