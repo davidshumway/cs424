@@ -519,7 +519,7 @@ filters2 <- function(input, output, side) {
       # already in tract level
       t <- cookAgeTract
       t <- t[order(t$x),]
-      t <- tail(t, round(nrow(t) * 0.1)) # trim
+      t <- head(t, round(nrow(t) * 0.1)) # trim
       m <- mapview(t, zcol = 'x')
       render('mapplot', renderLeaflet({
         m@map
@@ -528,7 +528,7 @@ filters2 <- function(input, output, side) {
       # already in tract level
       t <- cookAgeTract
       t <- t[order(t$x),]
-      t <- head(t, round(nrow(t) * 0.1)) # trim
+      t <- tail(t, round(nrow(t) * 0.1)) # trim
       m <- mapview(t, zcol = 'x')
       render('mapplot', renderLeaflet({
         m@map
