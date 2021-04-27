@@ -15,22 +15,12 @@ library(leaflet)
 library(tidyr)
 options(tigris_use_cache = TRUE)
 
-library(shinyjs) # for click
-
 shinyServer(function(input, output, session) {
   
-  # about
   output$textAbout <- renderText({
-    '--'
+    ''
   })
   
-  #selectedData <- nwsTotalKWH
-  #ssm1 <- mapview(nwsTotalKWH, zcol = 'x')
-#~   m2 <- mapview(nwsTotalKWH, zcol = 'x')
-  #m3 <- mapview(loopTotalKWH, zcol = 'x')
-#~   m <- mapview(cooknws, zcol = 'TOTAL.POPULATION')
-#~   m <- mapview(x, zcol = 'NAME10')
-  #m <- mapview(ycol=sub_data$INTPTLAT10, xcol = sub_data$INTPTLON10, zcol = sub_data$KWH.JANUARY.2010)
   output$mapplot <- renderLeaflet({
     #m1@map
   })
@@ -145,6 +135,7 @@ shinyServer(function(input, output, session) {
   
   # Pretty much useless :(
   # Problem: On init, map3 has census blocks from map2, or vice versa
+  # Solution: Use layer.name in mapview
 #~   active <- reactiveVal(TRUE)
 #~   counter <- reactiveVal(10)
 #~   # timer example https://stackoverflow.com/questions/47485981/invalidatelater-shiny
