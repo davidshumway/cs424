@@ -170,6 +170,8 @@ cookdata1 <- merge(cook, data1, by = 'GEOID10')
 # tracts
 # cb = FALSE
 tracts <- tracts(state = 'IL', county = 'Cook', year = 2010)
+print(head(tracts))
+tracts <- subset(tracts, select = c(GEOID10, geometry))
 # add a col to data1 for tracts, then merge with tracts
 # 17031840300 vs.
 # 170318403001021
@@ -388,7 +390,7 @@ filters2 <- function(input, output, side) {
         selectedData[[i]], by=list(GEOID10=selectedData$GEOID10), FUN=sum)
       t[t == 0] <- NA
       nwsTotalKwh <- merge(selectedData, t, by = 'GEOID10')
-      m <- mapview(nwsTotalKwh, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(nwsTotalKwh, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -401,7 +403,7 @@ filters2 <- function(input, output, side) {
     t$x <- round(t$x, 1)
     t[t == 0] <- NA
     nwsAvgAge <- merge(selectedData, t, by = 'GEOID10')
-    m <- mapview(nwsAvgAge, zcol = 'x', , layer.name = paste0('layer', s))
+    m <- mapview(nwsAvgAge, zcol = 'x', layer.name = paste0('layer', s))
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
@@ -426,7 +428,7 @@ filters2 <- function(input, output, side) {
     )
     options(warn = 0) # reset
     t <- merge(selectedData, t, by = 'GEOID10')
-    m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+    m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
@@ -437,7 +439,7 @@ filters2 <- function(input, output, side) {
       selectedData$AVERAGE.STORIES, by=list(GEOID10=selectedData$GEOID10), FUN=mean)
 #~     t[t == 0] <- NA
     nwsAvgStories <- merge(selectedData, t, by = 'GEOID10')
-    m <- mapview(nwsAvgStories, zcol = 'x', , layer.name = paste0('layer', s))
+    m <- mapview(nwsAvgStories, zcol = 'x', layer.name = paste0('layer', s))
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
@@ -448,13 +450,13 @@ filters2 <- function(input, output, side) {
       selectedData$TOTAL.POPULATION, by=list(GEOID10=selectedData$GEOID10), FUN=mean)
     nwsTotalPop <- merge(selectedData, t, by = 'GEOID10')
     nwsTotalPop$TOTAL.POPULATION[nwsTotalPop$TOTAL.POPULATION == 0] <- NA
-    m <- mapview(nwsTotalPop, zcol = 'TOTAL.POPULATION', , layer.name = paste0('layer', s)) #??? if x then wrong #
+    m <- mapview(nwsTotalPop, zcol = 'TOTAL.POPULATION', layer.name = paste0('layer', s)) #??? if x then wrong #
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
   } else if (input[[paste0('viewType', s)]] == 'resAge') {
     t <- subset(cookAge, cookAge$GEOID10 %in% communityGeos$GEOID10)
-    m <- mapview(t, zcol = 'P013001', , layer.name = paste0('layer', s))
+    m <- mapview(t, zcol = 'P013001', layer.name = paste0('layer', s))
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
@@ -464,7 +466,7 @@ filters2 <- function(input, output, side) {
       return()
     }
     t <- subset(cookMigrant, cookMigrant$GEOID10 %in% communityGeos$GEOID10)
-    m <- mapview(t, zcol = 'H005007', , layer.name = paste0('layer', s))
+    m <- mapview(t, zcol = 'H005007', layer.name = paste0('layer', s))
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
@@ -476,7 +478,7 @@ filters2 <- function(input, output, side) {
     if (input[[paste0('viewType', s)]] == '10oldest') {
       t <- agg(selectedData, 'AVERAGE.BUILDING.AGE', mean)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -486,7 +488,7 @@ filters2 <- function(input, output, side) {
     } else if (input[[paste0('viewType', s)]] == '10newest') {
       t <- agg(selectedData, 'AVERAGE.BUILDING.AGE', mean)
       t <- head(t, round(nrow(t) * 0.1)) # trim
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -496,7 +498,7 @@ filters2 <- function(input, output, side) {
     } else if (input[[paste0('viewType', s)]] == '10tallest') {
       t <- agg(selectedData, 'AVERAGE.STORIES', mean)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -506,7 +508,7 @@ filters2 <- function(input, output, side) {
     } else if (input[[paste0('viewType', s)]] == '10shortest') {
       t <- agg(selectedData, 'AVERAGE.STORIES', mean)
       t <- head(t, round(nrow(t) * 0.1)) # trim
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -520,7 +522,7 @@ filters2 <- function(input, output, side) {
         i <- paste0('KWH', input[[paste0('month', s)]])
       t <- agg(selectedData, i, sum)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -533,7 +535,7 @@ filters2 <- function(input, output, side) {
         i <- paste0('THERM', input[[paste0('month', s)]])
       t <- agg(selectedData, i, sum)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -549,7 +551,7 @@ filters2 <- function(input, output, side) {
       t <- agg(tmp, 'TOTAL.POPULATION', sum)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
       print(head(t, 4))
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -562,7 +564,7 @@ filters2 <- function(input, output, side) {
       t <- agg(tmp, 'TOTAL.POPULATION', sum)
       t <- head(t, round(nrow(t) * 0.1)) # trim
       print(head(t, 4))
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -572,14 +574,14 @@ filters2 <- function(input, output, side) {
       t <- agg(selectedData, 'OCCUPIED.UNITS.PERCENTAGE', mean)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
       print(head(t, 2))
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
     } else if (input[[paste0('viewType', s)]] == '10renters') {
       t <- agg(selectedData, 'RENTER.OCCUPIED.HOUSING.PERCENTAGE', mean)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -590,7 +592,7 @@ filters2 <- function(input, output, side) {
       t <- cookAgeTract
       t <- t[order(t$x),]
       t <- head(t, round(nrow(t) * 0.1)) # trim
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -601,7 +603,7 @@ filters2 <- function(input, output, side) {
       t <- cookAgeTract
       t <- t[order(t$x),]
       t <- tail(t, round(nrow(t) * 0.1)) # trim
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
@@ -614,7 +616,7 @@ filters2 <- function(input, output, side) {
       t <- t[order(t$x),]
       t <- tail(t, round(nrow(t) * 0.1)) # trim
       t <- subset(t, t$x > 0) # less than 10% of tracts contain housing unit
-      m <- mapview(t, zcol = 'x', , layer.name = paste0('layer', s))
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
