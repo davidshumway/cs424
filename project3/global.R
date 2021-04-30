@@ -239,18 +239,18 @@ render <- function(outputElem, reactiveElem, side, output) {
 }
 
 # agg
-# selectedData
+# selection
 # col: eg 'AVERAGE.STORIES'
 # aggType: eg mean or sum
 #  -- Note: Using an external vector in selections is ambiguous.
 #  -- ℹ Use `all_of(col)` instead of `col` to silence this message.
-agg <- function(selectedData, col, aggType) {
-  selectedData <- selectedData %>% drop_na(all_of(col))
+agg <- function(selection, col, aggType) {
+  selection <- selection %>% drop_na(all_of(col))
   t <- aggregate(
-    selectedData[[col]], by=list(GEOID10=selectedData$GEOID10), FUN=aggType)
+    selection[[col]], by=list(GEOID10=selection$GEOID10), FUN=aggType)
   t$x <- round(t$x, 1)
   #t[t == 0] <- NA
-  t <- merge(selectedData, t, by = 'GEOID10')
+  t <- merge(selection, t, by = 'GEOID10')
   t <- t[!duplicated(t[,c('GEOID10')]),] # remove duplicates
   # don't order by eg t$AVERAGE.STORIES, order by the aggregate (ie x)!
   t <- t[order(t$x),] 
@@ -288,20 +288,31 @@ filters2 <- function(input, output, side) {
 #~     ...
   )
   
-  communityGeos <- list()
   if (input[[paste0('bt', s)]] == 'blocks') {
+    communityGeos <- list()
     n <- subset(data1, COMMUNITY.AREA.NAME == input[[paste0('community', s)]])
     n <- unique(n[c('GEOID10')])
     n <- n %>% drop_na(GEOID10) # drop where GEOID10 is empty, i.e., the total rows
-    selectedData <- subset(cookdata1, cookdata1$GEOID10 %in% n$GEOID10)
     communityGeos <- n
+    selection <- subset(cookdata1, cookdata1$GEOID10 %in% communityGeos$GEOID10)
+#~     if (input[[paste0('viewType', s)]] != 'resAge') {
+#~       selection <- subset(cookdata1, cookdata1$GEOID10 %in% communityGeos$GEOID10)
+#~     } else if (input[[paste0('viewType', s)]] == 'resAge') {
+#~       selection <- subset(cookAge, cookAge$GEOID10 %in% communityGeos$GEOID10)
+#~     }
   } else if (input[[paste0('bt', s)]] == 'tracts') {
-    selectedData <- cookTracts %>% drop_na(GEOID10) # drop where GEOID10 is empty, i.e., the total rows
-    #selectedData <- cookTracts
+    selection <- cookTracts %>% drop_na(GEOID10) # drop where GEOID10 is empty, i.e., the total rows
+    #selection <- cookTracts
+    
+#~     if (input[[paste0('viewType', s)]] == 'resAge') {
+#~       selection <- cookAgeTract %>% drop_na(GEOID10)
+#~     }
   }
   
+  
+    
   if (length(input[[paste0('building', s)]]) != 3) {
-    selectedData <- subset(selectedData, BUILDING.TYPE %in% input[[paste0('building', s)]])
+    selection <- subset(selection, BUILDING.TYPE %in% input[[paste0('building', s)]])
   }
   
 #~   # filter month
@@ -311,11 +322,11 @@ filters2 <- function(input, output, side) {
 #~       i <- paste0('THERM', input[[paste0('month', s)]])
 #~     else
 #~       i <- paste0('KWH', input[[paste0('month', s)]])
-#~     selectedData <- subset(selectedData, )
+#~     selection <- subset(selection, )
 #~   }
   
   # No data
-  if (nrow(selectedData) == 0) {
+  if (nrow(selection) == 0) {
     m <- mapview()
     render('mapplot', renderLeaflet({
       m@map
@@ -348,16 +359,18 @@ filters2 <- function(input, output, side) {
     mapviewOptions(vector.palette = colorRampPalette(c("#fee8c8", "#ef6548", "#7f0000")))
   }
   
+  ###selection <- selection %>% drop_na(TOTAL.THERMS)#??
+  ###selection <- selection %>% drop_na(TOTAL.KWH)
+  
   # view type
-#~   if (input[[paste0('bt', s)]] == 'blocks') {
   if (input[[paste0('viewType', s)]] == 'gas') {
-    selectedData <- selectedData %>% drop_na(TOTAL.THERMS)
+    selection <- selection %>% drop_na(TOTAL.THERMS)
     # consider month and building type, if selected
     if (input[[paste0('month', s)]] == 'all') {
       t <- aggregate(
-        selectedData$TOTAL.THERMS, by=list(GEOID10=selectedData$GEOID10), FUN=sum)
+        selection$TOTAL.THERMS, by=list(GEOID10=selection$GEOID10), FUN=sum)
       t[t == 0] <- NA
-      nwsTotalThm <- merge(selectedData, t, by = 'GEOID10')
+      nwsTotalThm <- merge(selection, t, by = 'GEOID10')
       m <- mapview(nwsTotalThm, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
@@ -365,21 +378,21 @@ filters2 <- function(input, output, side) {
     } else {
       i <- paste0('THERM', input[[paste0('month', s)]])
       t <- aggregate(
-        selectedData[[i]], by=list(GEOID10=selectedData$GEOID10), FUN=sum)
+        selection[[i]], by=list(GEOID10=selection$GEOID10), FUN=sum)
       t[t == 0] <- NA
-      nwsTotalThm <- merge(selectedData, t, by = 'GEOID10')
+      nwsTotalThm <- merge(selection, t, by = 'GEOID10')
       m <- mapview(nwsTotalThm, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
     }
   } else if (input[[paste0('viewType', s)]] == 'electric') {
-    selectedData <- selectedData %>% drop_na(TOTAL.KWH)
+    selection <- selection %>% drop_na(TOTAL.KWH)
     if (input[[paste0('month', s)]] == 'all') {
       t <- aggregate(
-        selectedData$TOTAL.KWH, by=list(GEOID10=selectedData$GEOID10), FUN=sum)
+        selection$TOTAL.KWH, by=list(GEOID10=selection$GEOID10), FUN=sum)
       t[t == 0] <- NA
-      nwsTotalKWH <- merge(selectedData, t, by = 'GEOID10')
+      nwsTotalKWH <- merge(selection, t, by = 'GEOID10')
       m <- mapview(nwsTotalKWH, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
@@ -387,9 +400,9 @@ filters2 <- function(input, output, side) {
     } else {
       i <- paste0('KWH', input[[paste0('month', s)]])
       t <- aggregate(
-        selectedData[[i]], by=list(GEOID10=selectedData$GEOID10), FUN=sum)
+        selection[[i]], by=list(GEOID10=selection$GEOID10), FUN=sum)
       t[t == 0] <- NA
-      nwsTotalKwh <- merge(selectedData, t, by = 'GEOID10')
+      nwsTotalKwh <- merge(selection, t, by = 'GEOID10')
       m <- mapview(nwsTotalKwh, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
@@ -397,12 +410,12 @@ filters2 <- function(input, output, side) {
     }
   } else if (input[[paste0('viewType', s)]] == 'age') {
     # consider building type, if selected
-    selectedData <- selectedData %>% drop_na(AVERAGE.BUILDING.AGE)
+    selection <- selection %>% drop_na(AVERAGE.BUILDING.AGE)
     t <- aggregate(
-      selectedData$AVERAGE.BUILDING.AGE, by=list(GEOID10=selectedData$GEOID10), FUN=mean)
+      selection$AVERAGE.BUILDING.AGE, by=list(GEOID10=selection$GEOID10), FUN=mean)
     t$x <- round(t$x, 1)
     t[t == 0] <- NA
-    nwsAvgAge <- merge(selectedData, t, by = 'GEOID10')
+    nwsAvgAge <- merge(selection, t, by = 'GEOID10')
     m <- mapview(nwsAvgAge, zcol = 'x', layer.name = paste0('layer', s))
     render('mapplot', renderLeaflet({
       m@map
@@ -410,7 +423,7 @@ filters2 <- function(input, output, side) {
   } else if (input[[paste0('viewType', s)]] == 'type') {
     options(warn = -1)
     t <- aggregate(
-      selectedData$BUILDING.TYPE, by=list(GEOID10=selectedData$GEOID10),
+      selection$BUILDING.TYPE, by=list(GEOID10=selection$GEOID10),
       FUN = function(x) {
         if (length(unique(x)) == 1) {
           if (x == 'Residential')
@@ -427,127 +440,140 @@ filters2 <- function(input, output, side) {
       }
     )
     options(warn = 0) # reset
-    t <- merge(selectedData, t, by = 'GEOID10')
+    t <- merge(selection, t, by = 'GEOID10')
     m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
   } else if (input[[paste0('viewType', s)]] == 'height') {
     # consider building type, if selected
-    selectedData <- selectedData %>% drop_na(AVERAGE.STORIES)
+    selection <- selection %>% drop_na(AVERAGE.STORIES)
     t <- aggregate(
-      selectedData$AVERAGE.STORIES, by=list(GEOID10=selectedData$GEOID10), FUN=mean)
+      selection$AVERAGE.STORIES, by=list(GEOID10=selection$GEOID10), FUN=mean)
 #~     t[t == 0] <- NA
-    nwsAvgStories <- merge(selectedData, t, by = 'GEOID10')
+    nwsAvgStories <- merge(selection, t, by = 'GEOID10')
     m <- mapview(nwsAvgStories, zcol = 'x', layer.name = paste0('layer', s))
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
   } else if (input[[paste0('viewType', s)]] == 'population') {
     # consider building type, if selected
-    selectedData <- selectedData %>% drop_na(TOTAL.POPULATION)
+    selection <- selection %>% drop_na(TOTAL.POPULATION)
     t <- aggregate( # mean unnecessary but fits workflow
-      selectedData$TOTAL.POPULATION, by=list(GEOID10=selectedData$GEOID10), FUN=mean)
-    nwsTotalPop <- merge(selectedData, t, by = 'GEOID10')
+      selection$TOTAL.POPULATION, by=list(GEOID10=selection$GEOID10), FUN=mean)
+    nwsTotalPop <- merge(selection, t, by = 'GEOID10')
     nwsTotalPop$TOTAL.POPULATION[nwsTotalPop$TOTAL.POPULATION == 0] <- NA
     m <- mapview(nwsTotalPop, zcol = 'TOTAL.POPULATION', layer.name = paste0('layer', s)) #??? if x then wrong #
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
   } else if (input[[paste0('viewType', s)]] == 'resAge') {
-    t <- subset(cookAge, cookAge$GEOID10 %in% communityGeos$GEOID10)
-    m <- mapview(t, zcol = 'P013001', layer.name = paste0('layer', s))
+    if (input[[paste0('bt', s)]] == 'blocks') {
+      t <- subset(cookAge, cookAge$GEOID10 %in% communityGeos$GEOID10)
+      m <- mapview(t, zcol = 'P013001', layer.name = paste0('layer', s))
+    } else {
+      t <- cookAgeTract
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
+    }
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
   } else if (input[[paste0('viewType', s)]] == 'migrant') { 
-    if (input[[paste0('bt', s)]] == 'tracts') {
-      # if tracts, this is empty
-      return()
+    if (input[[paste0('bt', s)]] == 'blocks') {
+      t <- subset(cookMigrant, cookMigrant$GEOID10 %in% communityGeos$GEOID10)
+      m <- mapview(t, zcol = 'H005007', layer.name = paste0('layer', s))
+    } else {
+      t <- cookMigrantTract
+      m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
     }
-    t <- subset(cookMigrant, cookMigrant$GEOID10 %in% communityGeos$GEOID10)
-    m <- mapview(t, zcol = 'H005007', layer.name = paste0('layer', s))
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
+#~     t <- subset(cookMigrant, cookMigrant$GEOID10 %in% communityGeos$GEOID10)
+#~     m <- mapview(t, zcol = 'H005007', layer.name = paste0('layer', s))
+#~     render('mapplot', renderLeaflet({
+#~       m@map
+#~     }), s, output)
+#~     g <- unique(t[c('GEOID10')])
+#~     selection <- subset(selection, selection$GEOID10 %in% g$GEOID10)
   }
 #~   }
   # View types for top 10% / full city, only when tracts is selected
   # Use drop_na to remove empty/NA data (note: keeps 0s)
   else if (input[[paste0('bt', s)]] == 'tracts') {
     if (input[[paste0('viewType', s)]] == '10oldest') {
-      t <- agg(selectedData, 'AVERAGE.BUILDING.AGE', mean)
+      t <- agg(selection, 'AVERAGE.BUILDING.AGE', mean)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
       m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
-      #selectedData <- t #update this
+      #selection <- t #update this
       g <- unique(t[c('GEOID17____')])
-      selectedData <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
+      selection <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
     } else if (input[[paste0('viewType', s)]] == '10newest') {
-      t <- agg(selectedData, 'AVERAGE.BUILDING.AGE', mean)
+      t <- agg(selection, 'AVERAGE.BUILDING.AGE', mean)
       t <- head(t, round(nrow(t) * 0.1)) # trim
       m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
-      #selectedData <- t #update this
+      #selection <- t #update this
       g <- unique(t[c('GEOID17____')])
-      selectedData <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
+      selection <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
     } else if (input[[paste0('viewType', s)]] == '10tallest') {
-      t <- agg(selectedData, 'AVERAGE.STORIES', mean)
+      t <- agg(selection, 'AVERAGE.STORIES', mean)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
       m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
       g <- unique(t[c('GEOID17____')])
-      selectedData <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
-#~       print(paste0('tall',length(selectedData)))
+      selection <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
+#~       print(paste0('tall',length(selection)))
     } else if (input[[paste0('viewType', s)]] == '10shortest') {
-      t <- agg(selectedData, 'AVERAGE.STORIES', mean)
+      t <- agg(selection, 'AVERAGE.STORIES', mean)
       t <- head(t, round(nrow(t) * 0.1)) # trim
       m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
       g <- unique(t[c('GEOID17____')])
-      selectedData <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
-#~       print(paste0('short',length(selectedData)))
+      selection <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
+#~       print(paste0('short',length(selection)))
     } else if (input[[paste0('viewType', s)]] == '10electric') {
       if (input[[paste0('month', s)]] == 'all')
         i <- 'TOTAL.KWH'
       else
         i <- paste0('KWH', input[[paste0('month', s)]])
-      t <- agg(selectedData, i, sum)
+      t <- agg(selection, i, sum)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
       m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
       g <- unique(t[c('GEOID17____')])
-      selectedData <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
+      selection <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
     } else if (input[[paste0('viewType', s)]] == '10gas') {
       if (input[[paste0('month', s)]] == 'all')
         i <- 'TOTAL.THERMS'
       else
         i <- paste0('THERM', input[[paste0('month', s)]])
-      t <- agg(selectedData, i, sum)
+      t <- agg(selection, i, sum)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
       m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
       g <- unique(t[c('GEOID17____')])
-      selectedData <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
+      selection <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
     } else if (input[[paste0('viewType', s)]] == '10population') {
       # Issue: in block it's mean, here it's sum! (Eg 03+03+04+04!!)
       # so start by dropping (subset)
       # Subsetting by 17 (block) or 10 (tract) is essentially the same
       # resutl as rows in cookTracts are identified by both. 
-      g <- unique(selectedData[c('GEOID17____')])
-      tmp <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
+      g <- unique(selection[c('GEOID17____')])
+      tmp <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
       t <- agg(tmp, 'TOTAL.POPULATION', sum)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
       print(head(t, 4))
@@ -556,11 +582,11 @@ filters2 <- function(input, output, side) {
         m@map
       }), s, output)
       g <- unique(t[c('GEOID17____')])
-      selectedData <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
+      selection <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
     } else if (input[[paste0('viewType', s)]] == '10poplowest') {
       # Issue: same as above
-      g <- unique(selectedData[c('GEOID17____')])
-      tmp <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
+      g <- unique(selection[c('GEOID17____')])
+      tmp <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
       t <- agg(tmp, 'TOTAL.POPULATION', sum)
       t <- head(t, round(nrow(t) * 0.1)) # trim
       print(head(t, 4))
@@ -569,9 +595,9 @@ filters2 <- function(input, output, side) {
         m@map
       }), s, output)
       g <- unique(t[c('GEOID17____')])
-      selectedData <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
+      selection <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
     } else if (input[[paste0('viewType', s)]] == '10occupied') {
-      t <- agg(selectedData, 'OCCUPIED.UNITS.PERCENTAGE', mean)
+      t <- agg(selection, 'OCCUPIED.UNITS.PERCENTAGE', mean)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
       print(head(t, 2))
       m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
@@ -579,16 +605,16 @@ filters2 <- function(input, output, side) {
         m@map
       }), s, output)
     } else if (input[[paste0('viewType', s)]] == '10renters') {
-      t <- agg(selectedData, 'RENTER.OCCUPIED.HOUSING.PERCENTAGE', mean)
+      t <- agg(selection, 'RENTER.OCCUPIED.HOUSING.PERCENTAGE', mean)
       t <- tail(t, round(nrow(t) * 0.1)) # trim
       m <- mapview(t, zcol = 'x', layer.name = paste0('layer', s))
       render('mapplot', renderLeaflet({
         m@map
       }), s, output)
       g <- unique(t[c('GEOID17____')])
-      selectedData <- subset(selectedData, selectedData$GEOID17____ %in% g$GEOID17____)
+      selection <- subset(selection, selection$GEOID17____ %in% g$GEOID17____)
     } else if (input[[paste0('viewType', s)]] == '10age') {
-      #selectedData <- cookAgeTract
+      #selection <- cookAgeTract
       t <- cookAgeTract
       t <- t[order(t$x),]
       t <- head(t, round(nrow(t) * 0.1)) # trim
@@ -597,9 +623,9 @@ filters2 <- function(input, output, side) {
         m@map
       }), s, output)
       g <- unique(t[c('GEOID10')])
-      selectedData <- subset(selectedData, selectedData$GEOID10 %in% g$GEOID10)
+      selection <- subset(selection, selection$GEOID10 %in% g$GEOID10)
     } else if (input[[paste0('viewType', s)]] == '10ageoldest') {
-      #selectedData <- cookAgeTract
+      #selection <- cookAgeTract
       t <- cookAgeTract
       t <- t[order(t$x),]
       t <- tail(t, round(nrow(t) * 0.1)) # trim
@@ -608,10 +634,10 @@ filters2 <- function(input, output, side) {
         m@map
       }), s, output)
       g <- unique(t[c('GEOID10')])
-      selectedData <- subset(selectedData, selectedData$GEOID10 %in% g$GEOID10)
+      selection <- subset(selection, selection$GEOID10 %in% g$GEOID10)
     } else if (input[[paste0('viewType', s)]] == '10worker') {
       # already in tract level
-      #selectedData <- cookMigrantTract
+      #selection <- cookMigrantTract
       t <- cookMigrantTract
       t <- t[order(t$x),]
       t <- tail(t, round(nrow(t) * 0.1)) # trim
@@ -621,17 +647,17 @@ filters2 <- function(input, output, side) {
         m@map
       }), s, output)
       g <- unique(t[c('GEOID10')])
-      selectedData <- subset(selectedData, selectedData$GEOID10 %in% g$GEOID10)
+      selection <- subset(selection, selection$GEOID10 %in% g$GEOID10)
     }
   }
   
   # Remove geometry, coerce to data.frame
   # https://www.rdocumentation.org/packages/sf/versions/0.7-3/topics/st_geometry
-  # selectedData refers to all census areas currently showing
+  # selection refers to all census areas currently showing
   
   # electric
   a <- renderPlot({
-    t <- st_set_geometry(selectedData, NULL) 
+    t <- st_set_geometry(selection, NULL) 
     mos <- c(1:12)
     t <- data.frame(
       mWh = colSums(
@@ -650,7 +676,7 @@ filters2 <- function(input, output, side) {
   
   # gas
   a <- renderPlot({
-    t <- st_set_geometry(selectedData, NULL) 
+    t <- st_set_geometry(selection, NULL) 
     mos <- c(1:12)
     t <- data.frame(
       mWh = colSums(
@@ -669,7 +695,7 @@ filters2 <- function(input, output, side) {
   
   # dt
   a <- DT::renderDataTable({
-    t <- st_set_geometry(selectedData, NULL) 
+    t <- st_set_geometry(selection, NULL) 
     mos <- c(1:12)
     t <- data.frame(
       mWh = colSums(
@@ -683,7 +709,7 @@ filters2 <- function(input, output, side) {
   })
   render('data1tbl', a, s, output)
   a <- DT::renderDataTable({
-    t <- st_set_geometry(selectedData, NULL) 
+    t <- st_set_geometry(selection, NULL) 
     mos <- c(1:12)
     t <- data.frame(
       mWh = colSums(
@@ -699,7 +725,7 @@ filters2 <- function(input, output, side) {
 }
 
 filters <- function(input, output) {
-  selectedData <- cooknws
+  selection <- cooknws
   
   mapviewOptions(vector.palette = colorRampPalette(c("#fcc5c0", "#dd3497", "#49006a")))
   mapviewOptions(basemaps = 
@@ -707,12 +733,12 @@ filters <- function(input, output) {
       "Esri.WorldImagery", "OpenTopoMap"))
   
   if (length(input$building) != 3) {
-    selectedData <- subset(selectedData, BUILDING.TYPE %in% input$building)
+    selection <- subset(selection, BUILDING.TYPE %in% input$building)
   }
   
   if ((input$viewType == 'gas' || input$viewType == 'electric') &&
     input$month != 'all') {
-    selectedData <- subset(selectedData, BUILDING.TYPE %in% input$building)
+    selection <- subset(selection, BUILDING.TYPE %in% input$building)
   }
   
   # month
@@ -720,7 +746,7 @@ filters <- function(input, output) {
     # consider month and building type, if selected
     if (input$month == 'all') {
       t <- aggregate(
-        selectedData$TOTAL.THERMS, by=list(GEOID10=selectedData$GEOID10), FUN=sum)
+        selection$TOTAL.THERMS, by=list(GEOID10=selection$GEOID10), FUN=sum)
       t[t == 0] <- NA
       nwsTotalThm <- merge(cooknws, t, by = 'GEOID10')
       m <- mapview(nwsTotalThm, zcol = 'x', basemap = 'CartoDB.Positron')
@@ -730,7 +756,7 @@ filters <- function(input, output) {
     } else {
       i <- paste0('THERM', input$month)
       t <- aggregate(
-        selectedData[[i]], by=list(GEOID10=selectedData$GEOID10), FUN=sum)
+        selection[[i]], by=list(GEOID10=selection$GEOID10), FUN=sum)
       t[t == 0] <- NA
       nwsTotalThm <- merge(cooknws, t, by = 'GEOID10')
       m <- mapview(nwsTotalThm, zcol = 'x')
@@ -741,7 +767,7 @@ filters <- function(input, output) {
   } else if (input$viewType == 'electric') { # + month
     if (input$month == 'all') {
       t <- aggregate(
-        selectedData$TOTAL.KWH, by=list(GEOID10=selectedData$GEOID10), FUN=sum)
+        selection$TOTAL.KWH, by=list(GEOID10=selection$GEOID10), FUN=sum)
       t[t == 0] <- NA
       nwsTotalKWH <- merge(cooknws, t, by = 'GEOID10')
       m <- mapview(nwsTotalKWH, zcol = 'x')
@@ -751,7 +777,7 @@ filters <- function(input, output) {
     } else {
       i <- paste0('KWH', input$month)
       t <- aggregate(
-        selectedData[[i]], by=list(GEOID10=selectedData$GEOID10), FUN=sum)
+        selection[[i]], by=list(GEOID10=selection$GEOID10), FUN=sum)
       t[t == 0] <- NA
       nwsTotalKwh <- merge(cooknws, t, by = 'GEOID10')
       m <- mapview(nwsTotalKwh, zcol = 'x')
@@ -762,7 +788,7 @@ filters <- function(input, output) {
   } else if (input$viewType == 'age') {
     # consider building type, if selected
     t <- aggregate(
-      selectedData$AVERAGE.BUILDING.AGE, by=list(GEOID10=selectedData$GEOID10), FUN=mean)
+      selection$AVERAGE.BUILDING.AGE, by=list(GEOID10=selection$GEOID10), FUN=mean)
     t$x <- round(t$x, 1)
     t[t == 0] <- NA
     nwsAvgAge <- merge(cooknws, t, by = 'GEOID10')
@@ -773,7 +799,7 @@ filters <- function(input, output) {
   } else if (input$viewType == 'type') {
     options(warn = -1)
     t <- aggregate(
-      selectedData$BUILDING.TYPE, by=list(GEOID10=selectedData$GEOID10),
+      selection$BUILDING.TYPE, by=list(GEOID10=selection$GEOID10),
       FUN = function(x) {
         if (length(unique(x)) == 1) {
           if (x == 'Residential')
@@ -798,7 +824,7 @@ filters <- function(input, output) {
   } else if (input$viewType == 'height') {
     # consider building type, if selected
     t <- aggregate(
-      selectedData$AVERAGE.STORIES, by=list(GEOID10=selectedData$GEOID10), FUN=mean)
+      selection$AVERAGE.STORIES, by=list(GEOID10=selection$GEOID10), FUN=mean)
     t[t == 0] <- NA
     nwsAvgStories <- merge(cooknws, t, by = 'GEOID10')
     m <- mapview(nwsAvgStories, zcol = 'x')
@@ -808,7 +834,7 @@ filters <- function(input, output) {
   } else if (input$viewType == 'population') {
     # consider building type, if selected
     t <- aggregate( # mean unnecessary but fits workflow
-      selectedData$TOTAL.POPULATION, by=list(GEOID10=selectedData$GEOID10), FUN=mean)
+      selection$TOTAL.POPULATION, by=list(GEOID10=selection$GEOID10), FUN=mean)
     t[t == 0] <- NA
     nwsTotalPop <- merge(cooknws, t, by = 'GEOID10')
     m <- mapview(nwsTotalPop, zcol = 'x')
@@ -819,11 +845,11 @@ filters <- function(input, output) {
   
   # Remove geometry, coerce to data.frame
   # https://www.rdocumentation.org/packages/sf/versions/0.7-3/topics/st_geometry
-  # selectedData refers to all census areas currently showing
+  # selection refers to all census areas currently showing
   
   # electric
   output$bar1 <- renderPlot({
-    t <- st_set_geometry(selectedData, NULL) 
+    t <- st_set_geometry(selection, NULL) 
     mos <- c(1:12)
     t <- data.frame(
       mWh = colSums(
@@ -841,7 +867,7 @@ filters <- function(input, output) {
   
   # gas
   output$bar2 <- renderPlot({
-    t <- st_set_geometry(selectedData, NULL) 
+    t <- st_set_geometry(selection, NULL) 
     mos <- c(1:12)
     t <- data.frame(
       mWh = colSums(
@@ -859,7 +885,7 @@ filters <- function(input, output) {
   
   # dt
   output$data1tbl <- DT::renderDataTable({
-    t <- st_set_geometry(selectedData, NULL) 
+    t <- st_set_geometry(selection, NULL) 
     mos <- c(1:12)
     t <- data.frame(
       mWh = colSums(
@@ -872,7 +898,7 @@ filters <- function(input, output) {
     DT::datatable(t, escape = FALSE, options = list(pageLength = 3, dom = 'tp'))
   })
   output$data2tbl <- DT::renderDataTable({
-    t <- st_set_geometry(selectedData, NULL) 
+    t <- st_set_geometry(selection, NULL) 
     mos <- c(1:12)
     t <- data.frame(
       mWh = colSums(
