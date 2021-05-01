@@ -10,13 +10,10 @@ install.packages('RColorBrewer')
 install.packages('scales')
 install.packages('lattice')
 install.packages('mapview')
-install.packages('sf')
-install.packages('tigris')
-install.packages('leaflet')
 install.packages('tidyr')
-install.packages('shinydashboard')
 install.packages('ggplot2')
 install.packages('shinyWidgets')
+library(countrycode)
 ```
 
 Clone the package:
