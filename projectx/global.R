@@ -149,11 +149,11 @@ fmt <- function(x) {
 }
 f <- function(df) {
   paste0(
-    '<b>Name:</b>', df$name, '<br>',
-    '<b>Country:</b>', df$country_long, '<br>',
-    '<b>Capacity (MW):</b>', fmt(df$capacity_mw), '<br>',
-    '<b>Primary fuel:</b>', df$primary_fuel, '<br>',
-    '<b>Estimated generation 2017 (gWh):</b>', fmt(df$estimated_generation_gwh)
+    '<b>Name: </b>', df$name, '<br>',
+    '<b>Country: </b>', df$country_long, '<br>',
+    '<b>Capacity (MW): </b>', fmt(df$capacity_mw), '<br>',
+    '<b>Primary fuel: </b>', df$primary_fuel, '<br>',
+    '<b>Estimated generation 2017 (gWh): </b>', fmt(df$estimated_generation_gwh)
   )
 }
 data$Popup <- f(data)

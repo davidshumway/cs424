@@ -40,7 +40,7 @@ navbarPage('Project X - Power to the People', id='nav',
         checkboxGroupInput('m1Source', 'Source:',
           choices = energyList, selected = unlist(energyList)
         ),
-        selectInput('m1Country', 'Country:',
+        selectInput('m1Country', 'Continent:',
           c(uniqueCountries),
           multiple = FALSE, selected = 'Americas'
         ),
@@ -78,7 +78,7 @@ navbarPage('Project X - Power to the People', id='nav',
         checkboxGroupInput('m2Source', 'Source:',
           choices = energyList, selected = unlist(energyList)
         ),
-        selectInput('m2Country', 'Country:',
+        selectInput('m2Country', 'Continent:',
           c(uniqueCountries), # 'All countries' = 'ALL', 
           multiple = FALSE, selected = 'Asia'
         ),

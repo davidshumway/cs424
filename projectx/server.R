@@ -74,7 +74,7 @@ shinyServer(function(input, output, session) { #, session
     updateCheckboxGroupInput(session, 'm1Source', 'Source:',
       choices = energyList, selected = unlist(energyList)
     )
-    updateSelectInput(session, 'm1Country', 'Country:',
+    updateSelectInput(session, 'm1Country', 'Continent:',
       selected = 'Americas')
     updateSelectInput(session, 'm1BaseMap', 'Map Type:',
       selected = 'OpenStreetMap')
@@ -131,7 +131,7 @@ shinyServer(function(input, output, session) { #, session
     updateCheckboxGroupInput(session, 'm2Source', 'Source:',
       choices = energyList, selected = unlist(energyList)
     )
-    updateSelectInput(session, 'm2Country', 'Country:',
+    updateSelectInput(session, 'm2Country', 'Continent:',
       selected = 'Asia')
     updateSelectInput(session, 'm2BaseMap', 'Map Type:',
       selected = 'OpenStreetMap')
