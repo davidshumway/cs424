@@ -1,0 +1,10 @@
+name: projectx
+title:
+username:
+account: parrot
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4060880
+bundleId: 4542270
+url: https://parrot.shinyapps.io/projectx/
+when: 1619834170.87941
