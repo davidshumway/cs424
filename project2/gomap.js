@@ -7,9 +7,8 @@ $(document).on("click", ".go-map", function(e) {
   //~ var zip = $el.data("zip");
   $($("#nav a")[0]).tab("show");
   Shiny.onInputChange("goto", {
-    lat: lat,
-    lng: long,
-    //~ zip: zip,
+    lat: latitude,
+    lng: longitude,
     nonce: Math.random()
   });
 });

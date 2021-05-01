@@ -11,6 +11,7 @@ library(tigris)
 library(leaflet)
 library(tidyr)
 options(tigris_use_cache = TRUE)
+options(shiny.fullstacktrace = TRUE)
 
 ########################################################################
 # Code used to download additional census data
@@ -221,7 +222,6 @@ totalKWH <- aggregate(
 totalKWH[totalKWH == 0] <- NA
 nwsTotalKWH <- merge(cooknws, totalKWH, by = 'GEOID10')
 loopTotalKWH <- merge(cookloop, totalKWH, by = 'GEOID10')
-options(shiny.fullstacktrace = TRUE)
 
 render <- function(outputElem, reactiveElem, side, output) {
   s <- side
@@ -489,13 +489,6 @@ filters2 <- function(input, output, side) {
     render('mapplot', renderLeaflet({
       m@map
     }), s, output)
-#~     t <- subset(cookMigrant, cookMigrant$GEOID10 %in% communityGeos$GEOID10)
-#~     m <- mapview(t, zcol = 'H005007', layer.name = paste0('layer', s))
-#~     render('mapplot', renderLeaflet({
-#~       m@map
-#~     }), s, output)
-#~     g <- unique(t[c('GEOID10')])
-#~     selection <- subset(selection, selection$GEOID10 %in% g$GEOID10)
   }
 #~   }
   # View types for top 10% / full city, only when tracts is selected
