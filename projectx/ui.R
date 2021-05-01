@@ -41,7 +41,7 @@ navbarPage('Project X - Power to the People', id='nav',
           choices = energyList, selected = unlist(energyList)
         ),
         selectInput('m1Country', 'Continent:',
-          c(uniqueCountries),
+          c('All countries' = 'ALL', uniqueCountries), #
           multiple = FALSE, selected = 'Americas'
         ),
         selectInput('m1BaseMap', 'Map Type:',
@@ -79,7 +79,7 @@ navbarPage('Project X - Power to the People', id='nav',
           choices = energyList, selected = unlist(energyList)
         ),
         selectInput('m2Country', 'Continent:',
-          c(uniqueCountries), # 'All countries' = 'ALL', 
+          c('All countries' = 'ALL', uniqueCountries), #
           multiple = FALSE, selected = 'Asia'
         ),
         selectInput('m2BaseMap', 'Map Type:',

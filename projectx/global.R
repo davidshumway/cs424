@@ -22,6 +22,9 @@ data$country_long = countrycode(data$country_long, origin = 'country.name', 'con
 # Russia in Europe ala cc package? Hmmmmmm.
 data$country_long[data$country_long == 'Russia'] = 'Asia'
 
+# drop some unused coluns
+data = subset(data, select = -c(generation_gwh_2013,generation_gwh_2014,generation_gwh_2015,generation_gwh_2016,generation_gwh_2017, wepp_id, owner, source, url, geolocation_source, other_fuel1, other_fuel2, other_fuel3, gppd_idnr, country))
+
 uniqueCountries <- unique(data[c('country_long')])
 
 print(head(data, 1))
@@ -237,18 +240,18 @@ filter <- function(session, input, side) {
   s <- side
   if (rv$linked) {
     if (s == 1) {
-      updateCheckboxGroupInput(session, paste0('m2Source'), 'Source:',
+      updateCheckboxGroupInput(session, 'm2Source', 'Source:',
         choices = energyList, selected = unlist(input$m1Source)
       )
     } else {
-      updateCheckboxGroupInput(session, paste0('m1Source'), 'Source:',
+      updateCheckboxGroupInput(session, 'm1Source', 'Source:',
         choices = energyList, selected = unlist(input$m2Source)
       )
     }
   }
   c <- data
-  #if (input[[paste0('m', s, 'Country')]] != 'ALL')
-  c <- subset(c, country_long == input[[paste0('m', s, 'Country')]])
+  if (input[[paste0('m', s, 'Country')]] != 'ALL')
+    c <- subset(c, country_long == input[[paste0('m', s, 'Country')]])
   c <- subset(c, # size
     capacity_mw > as.numeric(input[[paste0('m', s, 'Range')]][[1]]*1000))
   c <- subset(c, # size

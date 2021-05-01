@@ -3,12 +3,13 @@ $(document).on("click", ".go-map", function(e) {
   e.preventDefault();
   $el = $(this);
   var lat = $el.data("lat");
-  var long = $el.data("long");
-  //~ var zip = $el.data("zip");
+  var lon = $el.data("lon");
+  var side = $el.data("side");
   $($("#nav a")[0]).tab("show");
   Shiny.onInputChange("goto", {
-    lat: latitude,
-    lng: longitude,
+    lat: lat,
+    lon: lon,
+    side: side,
     nonce: Math.random()
   });
 });

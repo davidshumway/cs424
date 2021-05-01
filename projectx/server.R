@@ -9,6 +9,7 @@ library(scales)
 library(lattice)
 
 shinyServer(function(input, output, session) { #, session
+  
   # about
 #~   output$textAbout <- renderText({ 
 #~     'Initial template used: (https://shiny.rstudio.com/gallery/superzip-example.html).<br>Author: David Shumway<br>Original data: (https://www.epa.gov/egrid/download-data).'
@@ -214,12 +215,27 @@ shinyServer(function(input, output, session) { #, session
     })
   })
   
+  observeEvent(input$goto, {
+    if (input$goto$side == 1) {
+      leafletProxy('map1') %>%
+        flyTo(lat=input$goto$lat, lng=input$goto$lon, zoom = 6)
+    } else {
+      leafletProxy('map2') %>%
+        flyTo(lat=input$goto$lat, lng=input$goto$lon, zoom = 6)
+    }
+  }, ignoreInit=T)
+  
   output$datatbl <- DT::renderDataTable({
     df <- data %>%
       mutate(Action = paste(
         '<a class="go-map" href="" data-lat="', latitude,
-        '" data-long="', longitude,
-        '"><i class="fa fa-crosshairs"></i></a>', sep = ''))
+        '" data-lon="', longitude,
+        '" data-side="1"><i class="fa fa-crosshairs"></i></a>',
+        '<a class="go-map" href="" data-lat="', latitude,
+        '" data-lon="', longitude,
+        '" data-side="2"><i class="fa fa-crosshairs"></i></a>',
+        sep = '')
+      )
     action <- DT::dataTableAjax(session, df, outputId = 'datatbl')
     DT::datatable(df, options = list(ajax = list(url = action)), escape = FALSE)
   })
