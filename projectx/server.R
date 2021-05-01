@@ -29,17 +29,17 @@ shinyServer(function(input, output, session) { #, session
   # 1 inputs
   observeEvent(input$m1Range, {
     filter(session, input, 1)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m1BaseMap, {
     filter(session, input, 1)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m1Country, {
     redrawMap1()
     filter(session, input, 1)
     ll = firstLL(input$m1Country)
     leafletProxy('map1') %>%
       flyTo(ll[[2]], ll[[1]], zoom = 3)
-  }, ignoreInit=FALSE)
+  }, ignoreInit=T)
   observeEvent(input$m1Link, {
     if (!rv$linked) {
       rv$linked = TRUE
@@ -47,29 +47,29 @@ shinyServer(function(input, output, session) { #, session
       rv$linked = FALSE
     }
     filter(session, input, 1)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m1Source, {
     # individual cb
     filter(session, input, 1)
-  }, ignoreInit=TRUE);
+  }, ignoreInit=T);
   observeEvent(input$m1All, {
     updateCheckboxGroupInput(session, 'm1Source', 'Source:',
       choices = energyList, selected = unlist(energyList)
     )
     filter(session, input, 1)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m1Ren, {
     updateCheckboxGroupInput(session, 'm1Source', 'Source:',
       choices = energyList, selected = unlist(energyListRen)
     )
     filter(session, input, 1)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m1NonRen, {
     updateCheckboxGroupInput(session, 'm1Source', 'Source:',
       choices = energyList, selected = unlist(energyListNonRen)
     )
     filter(session, input, 1)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m1Reset, {
     updateCheckboxGroupInput(session, 'm1Source', 'Source:',
       choices = energyList, selected = unlist(energyList)
@@ -81,22 +81,22 @@ shinyServer(function(input, output, session) { #, session
     updateSliderInput(session, 'm1Range', 'GW Range:',
       min = 0, max = 23, step = 1, value = c(0, 23))
     redrawMap1()
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   
   # 2 input
   observeEvent(input$m2Range, {
     filter(session, input, 2)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m2BaseMap, {
     filter(session, input, 2)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m2Country, {
     redrawMap2()
     filter(session, input, 2)
     ll = firstLL(input$m2Country)
     leafletProxy('map2') %>%
       flyTo(ll[[2]], ll[[1]], zoom = 3)
-  }, ignoreInit=FALSE)
+  }, ignoreInit=T)
   observeEvent(input$m2Link, {
     if (!rv$linked) {
       rv$linked = TRUE
@@ -104,29 +104,29 @@ shinyServer(function(input, output, session) { #, session
       rv$linked = FALSE
     }
     filter(session, input, 2)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m2Source, {
     # individual cb
     filter(session, input, 2)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m2All, {
     updateCheckboxGroupInput(session, 'm2Source', 'Source:',
       choices = energyList, selected = unlist(energyList)
     )
     filter(session, input, 2)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m2Ren, {
     updateCheckboxGroupInput(session, 'm2Source', 'Source:',
       choices = energyList, selected = unlist(energyListRen)
     )
     filter(session, input, 2)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m2NonRen, {
     updateCheckboxGroupInput(session, 'm2Source', 'Source:',
       choices = energyList, selected = unlist(energyListNonRen)
     )
     filter(session, input, 2)
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   observeEvent(input$m2Reset, {
     updateCheckboxGroupInput(session, 'm2Source', 'Source:',
       choices = energyList, selected = unlist(energyList)
@@ -138,7 +138,7 @@ shinyServer(function(input, output, session) { #, session
     updateSliderInput(session, 'm2Range', 'GW Range:',
       min = 0, max = 23, step = 1, value = c(0, 23))
     redrawMap2()
-  }, ignoreInit=TRUE)
+  }, ignoreInit=T)
   
   # p2, maps 1/2 
   # maps require redraw altering dataset year
